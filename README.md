@@ -9,7 +9,7 @@
  - Alfredo Sponton		
     + alfredogs73@gmail.com
  - Esteban Luna Mercado		
-    + @gmail.com
+    + raulestebanlunamercado@gmail.com
  - Cintia Castellan	
     + cintia01@gmail.com
  - Christian Fagan 
