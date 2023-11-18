@@ -48,5 +48,39 @@ public class UserService {
         }
     }
 
+    public UserDto updateUser(Long id, UserDto dto){
+        if(repository.existsById(id)){
+            User userToModify = repository.findById(id).get();
+            //validar que datos no vienen null parea setear en el objeto
+
+            //logica del Patch
+            if (dto.getUsername() != null){
+                userToModify.setUsername(dto.getUsername());
+            }
+
+            if (dto.getPassword() != null){
+                userToModify.setPassword(dto.getPassword());
+            }
+
+            if (dto.getEmail() != null){
+                userToModify.setEmail(dto.getEmail());
+            }
+
+            if (dto.getDni() != null){
+                userToModify.setDni(dto.getDni());
+            }
+
+            if (dto.getAddress() != null){
+                userToModify.setAddress(dto.getAddress());
+            }
+
+            if (dto.getBirthday_date() != null){
+                userToModify.setBirthday_date(dto.getBirthday_date());
+            }
+            User userModified = repository.save(userToModify);
+            return UserMapper.userToDto(userModified);
+        }
+        return null;
+    }
 
 }

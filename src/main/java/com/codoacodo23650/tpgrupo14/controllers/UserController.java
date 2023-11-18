@@ -50,17 +50,21 @@ public class UserController {
 
     // Modificar TOTALMENTE un usuario (PUT)
     @PutMapping(value = "/{id}")
-    public String updateFullUser(){
-        return "";
+    public ResponseEntity<UserDto> updateFullUser(@PathVariable Long id, @RequestBody UserDto userDto)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateUser(id, userDto));
     }
 
 
     // Modificar PARCIALMENTE un usuario (PATCH)
+    // finalmente no hizo falta, se hizo con el PUT
 
+    /*
     @PatchMapping(value = "/{id}")
     public String updateParcialUser(){
         return "";
     }
+     */
 
     // Eliminar un usuario
 
