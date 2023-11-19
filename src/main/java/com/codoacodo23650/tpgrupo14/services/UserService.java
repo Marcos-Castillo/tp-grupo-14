@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,11 +35,16 @@ public class UserService {
 
     public UserDto createUser(UserDto user){
         User entity = UserMapper.dtoTouser(user);
+        entity.setCreated_at(LocalDateTime.now());
         User entitySaved = repository.save(entity);
         user = UserMapper.userToDto(entitySaved);
         user.setPassword("******");
         return user;
     }
+
+    private LocalDateTime created_at;
+
+    private LocalDateTime updated_at;
 
     public String deleteUser(Long id){
         if (repository.existsById(id)){
@@ -77,6 +84,7 @@ public class UserService {
             if (dto.getBirthday_date() != null){
                 userToModify.setBirthday_date(dto.getBirthday_date());
             }
+            userToModify.setUpdated_at(LocalDateTime.now());
             User userModified = repository.save(userToModify);
             return UserMapper.userToDto(userModified);
         }

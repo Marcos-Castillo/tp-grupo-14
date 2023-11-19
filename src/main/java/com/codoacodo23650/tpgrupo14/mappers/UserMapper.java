@@ -2,13 +2,20 @@ package com.codoacodo23650.tpgrupo14.mappers;
 
 import com.codoacodo23650.tpgrupo14.entities.User;
 import com.codoacodo23650.tpgrupo14.entities.dtos.UserDto;
+import lombok.experimental.UtilityClass;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
+/* @UtilityClass
+Todos los métodos definidos en la clase se marcan automáticamente como static.
+Se agrega un constructor privado para evitar la instanciación de la clase.
+La clase se marca como final para evitar la herencia.*/
+@UtilityClass
 public class UserMapper {
 
-    public static User dtoTouser(UserDto dto){
+    public User dtoTouser(UserDto dto){
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
@@ -21,7 +28,7 @@ public class UserMapper {
         return user;
     }
 
-    public static UserDto userToDto(User user){
+    public UserDto userToDto(User user){
         UserDto dto = new UserDto();
         dto.setUsername(user.getUsername());
         dto.setPassword(user.getPassword());
@@ -35,3 +42,5 @@ public class UserMapper {
         return dto;
     }
 }
+
+
