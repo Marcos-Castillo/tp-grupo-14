@@ -1,7 +1,6 @@
 package com.codoacodo23650.tpgrupo14.entities.dtos;
 
 import com.codoacodo23650.tpgrupo14.entities.Account;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
