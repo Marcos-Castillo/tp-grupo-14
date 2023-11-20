@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "usuarios")
@@ -16,9 +17,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "usuario_id")
     private Long id;
 
     @Column(name = "usuario")
@@ -27,8 +28,10 @@ public class User {
     @Column(name = "contrasenia")
     private String password;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "dni")
     private String dni;
 
     @Column(name = "direccion")
@@ -37,12 +40,12 @@ public class User {
     @Column(name = "fecha_cumpleanios")
     private Date birthday_date;
 
-    // Fecha de creación y modificación (estado) de cada usuarios
-    // TODO: Refactor
+    @Column(name = "fecha_creacion")
     private LocalDateTime created_at;
 
+    @Column(name = "fecha_modificacion")
     private LocalDateTime updated_at;
 
-    // TODO: refactor
-    //private List<Account> accounts;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<Account> accounts;
 }
