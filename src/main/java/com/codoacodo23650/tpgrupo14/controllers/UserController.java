@@ -28,7 +28,7 @@ public class UserController {
 
     // Obtener una lista de usuarios registrados
 
-    @GetMapping
+    @GetMapping(value = "/")
     public ResponseEntity<List<User>> getUsers(){
         return ResponseEntity.status(HttpStatus.OK).body(service.getUsers());
     }

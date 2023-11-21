@@ -15,13 +15,9 @@ import java.time.LocalDateTime;
 public class TransferDto {
 
     private Long id;
-
     private Double amount;
-
     private Account accountOrigin;
-
     private Account accountDestination;
-
     private LocalDateTime date;
 
 }
