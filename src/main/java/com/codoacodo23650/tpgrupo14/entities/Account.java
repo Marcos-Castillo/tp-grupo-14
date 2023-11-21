@@ -9,7 +9,7 @@ import java.util.List;
 @Table(name = "cuentas")
 @Getter
 @Setter
-@Builder
+@Builder//patron de diseño builder
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
