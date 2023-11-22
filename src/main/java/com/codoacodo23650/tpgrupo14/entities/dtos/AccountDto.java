@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
+@Builder//patron de diseño builder
 @Getter
 @Setter
 public class AccountDto {

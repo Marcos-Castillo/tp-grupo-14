@@ -2,20 +2,28 @@ package com.codoacodo23650.tpgrupo14.services;
 
 import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.dtos.AccountDto;
+import com.codoacodo23650.tpgrupo14.mappers.AccountMapper;
+import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class AccountService {
-    public Account getAccountById(Long id) {
 
-        return Account.builder().build();
+    private AccountRepository repository;
 
+    public AccountService(AccountRepository repository){
+        this.repository = repository;
+    }
+    public AccountDto getAccountById(Long id) {
+        return AccountMapper.accountToDto(repository.findById(id).get());
     }
 
-    public AccountDto createAccount(AccountDto account) {
-        return AccountDto.builder().build();
+    public AccountDto createAccount(AccountDto dtoAccount) {
+        Account acount = AccountMapper.dtoToAccount(dtoAccount);
+        Account entitySaved =  repository.save(acount);
+        return AccountMapper.accountToDto(entitySaved);
     }
 
     public List<AccountDto> getAllAccount() {
@@ -24,10 +32,34 @@ public class AccountService {
     }
 
     public AccountDto updateAccount(Long id, AccountDto accountDto) {
-        return AccountDto.builder().build();
+        if(repository.existsById(id)){
+            Account accounToModify = repository.findById(id).get();
+            //validar que datos no vienen null parea setear en el objeto
+
+            //logica del Patch
+            if (accountDto.getAlias() != null){
+                accounToModify.setAlias(accountDto.getAlias());
+            }
+            if (accountDto.getCbu() != null){
+                accounToModify.setCbu(accountDto.getCbu());
+            }
+            if (accountDto.getName() != null){
+                accounToModify.setName(accountDto.getName());
+            }
+            if (accountDto.getAmount() != null){
+                accounToModify.setAmount(accountDto.getAmount());
+            }
+            if (accountDto.getOwner() != null){
+                accounToModify.setOwner(accountDto.getOwner());
+            }
+            Account accountModified = repository.save(accounToModify);
+            return AccountMapper.accountToDto(accountModified);
+        }
+        return null;
     }
 
     public String deleteAccount(Long id) {
-        return "borrado";
+        repository.deleteById(id);
+        return "Cuenta eliminada";
     }
 }
