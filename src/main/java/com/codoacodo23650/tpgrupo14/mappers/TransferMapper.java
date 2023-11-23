@@ -2,11 +2,13 @@ package com.codoacodo23650.tpgrupo14.mappers;
 
 import com.codoacodo23650.tpgrupo14.entities.Transfer;
 import com.codoacodo23650.tpgrupo14.entities.dtos.TransferDto;
+import lombok.experimental.UtilityClass;
 
 import java.time.LocalDateTime;
 
+@UtilityClass
 public class TransferMapper {
-    public Transfer dtoTotransfer(TransferDto dto){
+    public Transfer dtoToTransfer(TransferDto dto){
         Transfer transfer = new Transfer();
         transfer.setAmount(dto.getAmount());
         transfer.setAccountOrigin(dto.getAccountOrigin());
