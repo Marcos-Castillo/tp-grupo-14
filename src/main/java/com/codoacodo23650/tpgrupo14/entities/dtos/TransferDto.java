@@ -18,9 +18,9 @@ public class TransferDto {
 
     private Double amount;
 
-    private Account accountOrigin;
+    private Long accountOrigin;
 
-    private Account accountDestination;
+    private Long accountDestination;
 
     private LocalDateTime date;
 
