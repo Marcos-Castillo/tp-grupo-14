@@ -24,12 +24,13 @@
 
         @ManyToOne
         @JoinColumn(name = "cuenta_origen_id")
-        private Account accountOrigin;
+        private Long accountOrigin;
 
         @ManyToOne
         @JoinColumn(name = "cuenta_destino_id")
-        private Account accountDestination;
+        private Long accountDestination;
 
         @Column(name = "fecha_transferencia")
         private LocalDateTime date;
+
     }
