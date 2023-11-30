@@ -1,11 +1,6 @@
 package com.codoacodo23650.tpgrupo14.entities.dtos;
 
-import com.codoacodo23650.tpgrupo14.entities.Account;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
