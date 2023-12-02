@@ -1,6 +1,7 @@
 package com.codoacodo23650.tpgrupo14.services;
 
 import com.codoacodo23650.tpgrupo14.entities.Account;
+import com.codoacodo23650.tpgrupo14.entities.User;
 import com.codoacodo23650.tpgrupo14.entities.dtos.AccountDto;
 import com.codoacodo23650.tpgrupo14.mappers.AccountMapper;
 import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
@@ -20,8 +21,9 @@ public class AccountService {
         return AccountMapper.accountToDto(repository.findById(id).get());
     }
 
-    public AccountDto createAccount(AccountDto dtoAccount) {
+    public AccountDto createAccount(AccountDto dtoAccount, User user) {
         Account acount = AccountMapper.dtoToAccount(dtoAccount);
+        acount.setOwner(user);
         Account entitySaved =  repository.save(acount);
         return AccountMapper.accountToDto(entitySaved);
     }
@@ -49,9 +51,9 @@ public class AccountService {
             if (accountDto.getAmount() != null){
                 accounToModify.setAmount(accountDto.getAmount());
             }
-            if (accountDto.getOwner() != null){
-                accounToModify.setOwner(accountDto.getOwner());
-            }
+//            if (accountDto.getOwner() != null){
+//                accounToModify.setOwner(accountDto.getOwner());
+//            }
             Account accountModified = repository.save(accounToModify);
             return AccountMapper.accountToDto(accountModified);
         }

@@ -9,6 +9,8 @@ import java.util.List;
 @Table(name = "cuentas")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder//patron de diseño builder
 public class Account {
     @Id
