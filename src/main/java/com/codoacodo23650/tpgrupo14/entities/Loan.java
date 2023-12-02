@@ -2,18 +2,17 @@ package com.codoacodo23650.tpgrupo14.entities;
 
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Entity
-@Table(name = "prestamos")
+@Table(name = "PRESTAMOS")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@Entity
 public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +34,7 @@ public class Loan {
     private StatusLoan status;
 
     @ManyToOne
+    @JoinColumn(name = "account_id")
     private Account account;
-
-    @Column
-    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Installments> installments;
 
 }

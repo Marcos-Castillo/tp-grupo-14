@@ -19,5 +19,5 @@
 
 [Consigna TP](https://docs.google.com/document/d/15ljs8u2IyY3z4DIlqwdiv1JeHFROX6x8/edit)
 
-## Diagrama De Clases
+## UML
 ![Diagrama De Clases](diagrama_de_clases.png)

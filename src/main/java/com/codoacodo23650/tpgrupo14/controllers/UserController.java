@@ -28,8 +28,8 @@ public class UserController {
 
     // Obtener una lista de usuarios registrados
 
-    @GetMapping(value = "/")
-    public ResponseEntity<List<User>> getUsers(){
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getUsers(){
         return ResponseEntity.status(HttpStatus.OK).body(service.getUsers());
     }
 
@@ -37,7 +37,7 @@ public class UserController {
 
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.getUserById(id));
     }
 
@@ -67,7 +67,7 @@ public class UserController {
      */
 
     // Eliminar un usuario
-
+    //TODO:borrado logico
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteUser(id));
