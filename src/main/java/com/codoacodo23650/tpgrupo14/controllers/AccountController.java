@@ -4,6 +4,7 @@ import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.dtos.AccountDto;
 import com.codoacodo23650.tpgrupo14.services.AccountService;
+import com.codoacodo23650.tpgrupo14.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class AccountController {
 
     @Autowired
     private AccountService service;
+    @Autowired
+    private UserService userService;
 
     // Obtener una lista de cuentas registrados
     @GetMapping
@@ -32,9 +35,9 @@ public class AccountController {
 
     // Crear/Registrar un cuenta
 
-    @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto account){
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createAccount(account));
+    @PostMapping(value = "/{userId}")
+    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto account, @PathVariable Long userId){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createAccount(account, userService.getUserById(userId)));
     }
 
     // Modificar un cuenta (PUT)

@@ -10,6 +10,8 @@ import java.util.List;
 @Table(name = "CUENTAS")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder//patron de diseño builder
 @NoArgsConstructor
 @AllArgsConstructor

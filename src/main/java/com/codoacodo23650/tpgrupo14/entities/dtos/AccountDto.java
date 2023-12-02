@@ -14,5 +14,4 @@ public class AccountDto {
     private String cbu;
     private String alias;
     private Double amount;
-    private User owner;
 }
