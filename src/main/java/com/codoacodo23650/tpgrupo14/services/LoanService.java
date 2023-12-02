@@ -48,7 +48,14 @@ public class LoanService {
         return LoanMapper.loanToDto( repository.save(existingLoan));
     }
 
-    public void deleteLoan(Long loanId) {
-        repository.deleteById(loanId);
+    public String deleteLoan(Long loanId) {
+        if (repository.existsById(loanId)){
+            repository.deleteById(loanId);
+            return "El préstamo con id: " + loanId + " ha sido eliminada";
+        } else {
+            return "El préstamo con id: " + loanId + ", no ha sido eliminada";
+        }
+
+
     }
 }

@@ -48,9 +48,10 @@ public class LoanController {
     }
 
     //  eliminar un préstamo
+    // TODO:borrado logico
     @DeleteMapping("/{loanId}")
-    public ResponseEntity<?> deleteLoan(@PathVariable Long loanId) {
-        loanService.deleteLoan(loanId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<String> deleteLoan(@PathVariable Long loanId) {
+        return ResponseEntity.status(HttpStatus.OK).body(loanService.deleteLoan(loanId))
+                ;
     }
 }

@@ -15,20 +15,16 @@ import java.util.List;
 @RequestMapping("/api/account")
 public class AccountController {
 
-    // Necesito obtener una instancia del servicio de cuentas
     @Autowired
     private AccountService service;
 
     // Obtener una lista de cuentas registrados
-
     @GetMapping
     public ResponseEntity<List<AccountDto>> getAllAccount(){
         return ResponseEntity.status(HttpStatus.OK).body(service.getAllAccount());
     }
 
     // Obtener la info de un solo cuenta
-
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.getAccountById(id));
@@ -49,7 +45,7 @@ public class AccountController {
     }
 
     // Eliminar un cuenta
-
+    //TODO:borrado logico
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteAccount(id));
