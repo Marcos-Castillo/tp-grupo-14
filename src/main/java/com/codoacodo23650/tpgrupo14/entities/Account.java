@@ -10,6 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder//patron de diseño builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

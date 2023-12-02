@@ -118,7 +118,6 @@ public class TransferService {
         }
 
         if (dto.getAccountOrigin() == dto.getAccountDestination()){
-            //return null;
             throw new AccountsNotEqualsException("Origin Account is equal to Destination Account.");
         }
 

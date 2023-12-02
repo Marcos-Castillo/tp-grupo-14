@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -22,15 +23,18 @@ public class UserService {
         this.repository = repository;
     }
 
-    public List<User> getUsers(){
+    public List<UserDto> getUsers(){
         List<User> users = repository.findAll();
-        return users;
+        List<UserDto> usersDtos = users.stream()
+                .map(UserMapper::userToDto)
+                .collect(Collectors.toList());
+        return usersDtos;
     }
 
-    public User getUserById(Long id){
+    public UserDto getUserById(Long id){
         User user = repository.findById(id).get();
         user.setPassword("******");
-        return user;
+        return UserMapper.userToDto(user);
     }
 
     public UserDto createUser(UserDto user){
