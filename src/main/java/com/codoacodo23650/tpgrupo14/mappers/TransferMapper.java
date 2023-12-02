@@ -13,12 +13,13 @@ public class TransferMapper {
         transfer.setAmount(dto.getAmount());
         transfer.setAccountOrigin(dto.getAccountOrigin());
         transfer.setAccountDestination(dto.getAccountDestination());
-        transfer.setDate(LocalDateTime.now());
+        transfer.setDate(dto.getDate());
         return transfer;
     }
 
     public TransferDto transferToDto(Transfer transfer){
         TransferDto dto = new TransferDto();
+        dto.setId(transfer.getId());
         dto.setAmount(transfer.getAmount());
         dto.setAccountOrigin(transfer.getAccountOrigin());
         dto.setAccountDestination(transfer.getAccountDestination());
