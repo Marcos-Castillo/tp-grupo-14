@@ -1,5 +1,6 @@
 package com.codoacodo23650.tpgrupo14.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder//patron de diseño builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +31,7 @@ public class Account {
     @Column(name = "monto")
     private Double amount;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User owner;

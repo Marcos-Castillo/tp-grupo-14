@@ -3,59 +3,64 @@ package com.codoacodo23650.tpgrupo14.services;
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
-import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class LoanService {
 
-    private final LoanRepository repository;
+    private LoanRepository repository;
+    public LoanService(LoanRepository repository){
 
-    public LoanService(LoanRepository loanRepository) {
-        this.repository = loanRepository;
+        this.repository = repository;
     }
 
-    public List<LoanDto> getAllLoans() {
-        return repository.findAll().stream()
+    public List<LoanDto> getLoans(){
+        List<Loan> loans = repository.findAll();
+        List<LoanDto> loansDtos = loans.stream()
                 .map(LoanMapper::loanToDto)
                 .collect(Collectors.toList());
+        return loansDtos;
     }
 
-    public LoanDto getLoanById(Long loanId) {
-        LoanDto loanDto = LoanMapper.loanToDto(repository.findById(loanId).get());
-        return loanDto;
+    public LoanDto getLoanById(Long id){
+        Loan loan = repository.findById(id).get();
+        return LoanMapper.loanToDto(loan);
     }
 
-    public LoanDto createLoan(LoanDto loan) {
-        Loan loanToSave = LoanMapper.dtoToLoan(loan);
-        return LoanMapper.loanToDto( repository.save(loanToSave));
+    public LoanDto createLoan(LoanDto loan){
+        Loan entity = LoanMapper.dtoToLoan(loan);
+        entity.setCreated_at(LocalDateTime.now());
+        Loan entitySaved = repository.save(entity);
+        loan = LoanMapper.loanToDto(entitySaved);
+        return loan;
     }
 
-    public LoanDto updateLoan(Long loanId, LoanDto loanDetails) {
-        Loan existingLoan = repository.findById(loanId).get();
-
-        if (loanDetails.getAmount() != null) existingLoan.setAmount(loanDetails.getAmount());
-        if (loanDetails.getInterest() != null) existingLoan.setInterest(loanDetails.getInterest());
-        if (loanDetails.getDues() != null) existingLoan.setDues(loanDetails.getDues());
-        if (loanDetails.getDate() != null) existingLoan.setDate(loanDetails.getDate());
-        if (loanDetails.getStatus() != null) existingLoan.setStatus(loanDetails.getStatus());
-
-        return LoanMapper.loanToDto( repository.save(existingLoan));
-    }
-
-    public String deleteLoan(Long loanId) {
-        if (repository.existsById(loanId)){
-            repository.deleteById(loanId);
-            return "El préstamo con id: " + loanId + " ha sido eliminada";
+    public String deleteLoan(Long id){
+        if (repository.existsById(id)){
+            repository.deleteById(id);
+            return "El préstamo con id: " + id + " ha sido eliminado";
         } else {
-            return "El préstamo con id: " + loanId + ", no ha sido eliminada";
+            return "El préstamo con id: " + id + ", no ha sido eliminado";
         }
-
-
     }
+
+    public LoanDto updateLoan(Long id, LoanDto dto){
+        if(repository.existsById(id)){
+            Loan loanToModify = repository.findById(id).get();
+
+            loanToModify.setAmount(dto.getAmount());
+            loanToModify.setInterest(dto.getInterest());
+            loanToModify.setUpdated_at(LocalDateTime.now());
+
+            Loan loanModified = repository.save(loanToModify);
+            return LoanMapper.loanToDto(loanModified);
+        }
+        return null;
+    }
+
 }

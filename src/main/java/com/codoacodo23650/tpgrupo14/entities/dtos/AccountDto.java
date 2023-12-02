@@ -2,11 +2,10 @@ package com.codoacodo23650.tpgrupo14.entities.dtos;
 
 import com.codoacodo23650.tpgrupo14.entities.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Builder//patron de diseño builder
+//@Builder//patron de diseño builder
+@Builder
 @Getter
 @Setter
 public class AccountDto {
