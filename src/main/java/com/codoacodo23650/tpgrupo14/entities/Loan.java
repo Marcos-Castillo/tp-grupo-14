@@ -2,14 +2,16 @@ package com.codoacodo23650.tpgrupo14.entities;
 
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Table(name = "préstamos")
+@Table(name = "PRESTAMOS")
 @Getter
 @Setter
+@Builder
 public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
