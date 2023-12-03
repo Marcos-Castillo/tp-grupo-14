@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/loan")
@@ -23,6 +24,14 @@ public class LoanController {
     @GetMapping
     public ResponseEntity<List<LoanDto>> getAllLoans() {
         List<LoanDto> loans = loanService.getAllLoans();
+        return new ResponseEntity<>(loans, HttpStatus.OK);
+    }
+
+    //  obtener todos los préstamos de un Usuario
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<LoanDto>> getAllLoansByUserId(@PathVariable Long userId) {
+        List<LoanDto> loans = loanService.getAllLoans();
+        loans = loans.stream().filter(loanDto -> loanDto.getAccount().getOwner().getId().equals(userId)).collect(Collectors.toList());
         return new ResponseEntity<>(loans, HttpStatus.OK);
     }
 
