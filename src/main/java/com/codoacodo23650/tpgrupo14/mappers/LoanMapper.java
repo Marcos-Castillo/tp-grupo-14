@@ -13,6 +13,7 @@ public class LoanMapper {
                 .id(loan.getId())
                 .amount(loan.getAmount())
                 .interest(loan.getInterest())
+                .status(loan.getStatus())
                 .dues(loan.getDues())
                 .date(loan.getDate())
                 .account(loan.getAccount())
@@ -20,13 +21,14 @@ public class LoanMapper {
     }
 
     public Loan dtoToLoan(LoanDto dto) {
-        return Loan.builder()
-                .id(dto.getId())
-                .amount(dto.getAmount())
-                .interest(dto.getInterest())
-                .dues(dto.getDues())
-                .date(dto.getDate())
-                .account(dto.getAccount())
-                .build();
+        return new Loan(
+                (dto.getId()),
+                (dto.getAmount()),
+                (dto.getInterest()),
+                (dto.getDues()),
+                (dto.getDate()),
+                (dto.getStatus()),
+                (dto.getAccount())
+                );
     }
 }

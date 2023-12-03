@@ -19,6 +19,7 @@ public class TransferMapper {
 
     public TransferDto transferToDto(Transfer transfer){
         TransferDto dto = new TransferDto();
+        dto.setId(transfer.getId());
         dto.setAmount(transfer.getAmount());
         dto.setAccountOrigin(transfer.getAccountOrigin());
         dto.setAccountDestination(transfer.getAccountDestination());

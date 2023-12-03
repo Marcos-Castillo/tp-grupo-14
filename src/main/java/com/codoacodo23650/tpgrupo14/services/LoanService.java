@@ -2,6 +2,7 @@ package com.codoacodo23650.tpgrupo14.services;
 
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
+import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
 import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
@@ -33,8 +34,10 @@ public class LoanService {
 
     public LoanDto createLoan(LoanDto loan) {
         Loan loanToSave = LoanMapper.dtoToLoan(loan);
-        return LoanMapper.loanToDto( repository.save(loanToSave));
+        loanToSave.setStatus(StatusLoan.PENDING);
+        return LoanMapper.loanToDto(repository.save(loanToSave));
     }
+
 
     public LoanDto updateLoan(Long loanId, LoanDto loanDetails) {
         Loan existingLoan = repository.findById(loanId).get();

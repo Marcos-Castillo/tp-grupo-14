@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/loans")
+@RequestMapping("/api/loan")
 public class LoanController {
 
     private final LoanService loanService;
@@ -34,7 +34,7 @@ public class LoanController {
     }
 
     //  crear un nuevo préstamo
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<LoanDto> createLoan(@RequestBody LoanDto loan) {
         LoanDto createdLoan = loanService.createLoan(loan);
         return new ResponseEntity<>(createdLoan, HttpStatus.CREATED);
