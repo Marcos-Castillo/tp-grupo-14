@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import com.codoacodo23650.tpgrupo14.entities.enums.CivilStatusUser;
+import com.codoacodo23650.tpgrupo14.entities.enums.GenderUser;
+import com.codoacodo23650.tpgrupo14.entities.enums.StatusUser;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -28,17 +32,35 @@ public class User {
     @Column(name = "contrasenia")
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "nombre")
+    private String firstname;
+
+    @Column(name = "apellido")
+    private String surname;
+
+    @Column(name = "correo_electronico")
     private String email;
 
     @Column(name = "dni")
     private String dni;
 
+    @Column(name = "genero")
+    private GenderUser gender;
+
+    @Column(name = "estado_civil")
+    private CivilStatusUser civil_status;
+
+    @Column(name = "telefono")
+    private String phonenumber;
+
     @Column(name = "direccion")
     private String address;
 
-    @Column(name = "fecha_cumpleanios")
-    private Date birthday_date;
+    @Column(name = "fecha_nacimiento")
+    private Date birthdate;
+
+    @Column(name = "estado")
+    private StatusUser status;
 
     @Column(name = "fecha_creacion")
     private LocalDateTime created_at;
@@ -46,6 +68,19 @@ public class User {
     @Column(name = "fecha_modificacion")
     private LocalDateTime updated_at;
 
+    @Column(name = "fecha_baja")
+    private LocalDateTime deleted_at;
+
+    @Column(name = "ultimo_acceso")
+    private LocalDateTime last_login;
+
+    @Column(name = "intentos_fallidos")
+    private Integer failed_attempts;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Account> accounts;
+
+    public String getClient(){
+        return this.firstname + " " + this.surname;
+    }
 }
