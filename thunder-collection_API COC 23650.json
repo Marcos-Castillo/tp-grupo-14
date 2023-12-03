@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "API COC 23650",
-    "dateExported": "2023-12-03T06:00:33.204Z",
+    "dateExported": "2023-12-03T17:40:29.389Z",
     "version": "1.1",
     "folders": [
         {
@@ -123,11 +123,11 @@
             "colId": "1f336a45-7f2a-44fd-8379-799be1e99713",
             "containerId": "b46e361e-5990-41d1-83e7-8c5a3e56fa67",
             "name": "getLoanById",
-            "url": "localhost:8080/api/loan/1",
+            "url": "localhost:8080/api/loan/8",
             "method": "GET",
             "sortNum": 20000,
             "created": "2023-12-03T04:29:28.381Z",
-            "modified": "2023-12-03T05:37:50.897Z",
+            "modified": "2023-12-03T16:11:48.902Z",
             "headers": [],
             "params": [],
             "tests": []
@@ -174,12 +174,12 @@
             "method": "POST",
             "sortNum": 30000,
             "created": "2023-12-03T04:06:55.859Z",
-            "modified": "2023-12-03T04:11:11.660Z",
+            "modified": "2023-12-03T17:38:31.674Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \n  \"name\": \"nombre\",\n  \"cbu\": \"nrocbu\",\n  \"alias\": \"alias.alias.alias\",\n  \"amount\": 0\n  \n}",
+                "raw": "{\n  \n  \"name\": \"nombre\",\n  \"cbu\": \"nrocbu\",\n  \"alias\": \"alias.alias.alias\",\n  \"amount\": 0.0,\n  \"owner\":  {\n    \"id\": 6,\n    \"username\": \"prueba\",\n    \"password\": \"password\",\n    \"email\": \"correo@gmail.com\",\n    \"dni\": \"30000000\",\n    \"address\": \"adress 123\",\n    \"birthday_date\": \"2000-01-01T00:00:00.000+00:00\",\n    \"created_at\": \"2023-12-03T05:44:11.39351\",\n    \"updated_at\": \"2023-12-03T05:44:11.393506\"\n  }\n}",
                 "form": []
             },
             "tests": []
@@ -193,12 +193,12 @@
             "method": "POST",
             "sortNum": 30000,
             "created": "2023-12-03T04:29:28.382Z",
-            "modified": "2023-12-03T05:37:16.906Z",
+            "modified": "2023-12-03T16:09:28.785Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"amount\": 0.0,\n  \"interest\": 3,\n  \"dues\": 5000,\n  \"date\": null,\n  \"status\": \"PENDING\"\n  \n}",
+                "raw": "{\n  \"amount\": 1000.0,\n  \"interest\": 3.0,\n  \"dues\": 12,\n  \"status\": \"PENDING\",\n  \"account\": {\n  \"id\": 3,\n  \"name\": \"nombre\",\n  \"cbu\": \"nrocbu\",\n  \"alias\": \"alias.alias.alias\",\n  \"amount\": 5.55555555E8,\n  \"owner\": {\n    \"id\": 1,\n    \"username\": \"prueba\",\n    \"password\": \"password\",\n    \"email\": \"correo@gmail.com\",\n    \"dni\": \"30000000\",\n    \"address\": \"adress 123\",\n    \"birthday_date\": \"2000-01-01T00:00:00.000+00:00\",\n    \"created_at\": \"2023-12-03T05:44:09.019354\",\n    \"updated_at\": \"2023-12-03T06:14:45.522741\",\n    \"accounts\": null\n  }\n}\n}\n",
                 "form": []
             },
             "tests": []
@@ -212,12 +212,12 @@
             "method": "POST",
             "sortNum": 30000,
             "created": "2023-12-03T05:43:51.364Z",
-            "modified": "2023-12-03T05:54:59.080Z",
+            "modified": "2023-12-03T09:18:43.644Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "\n  {\n    \n    \"amount\": 222.0,\n    \"accountOrigin\": 1,\n    \"accountDestination\": 2,\n    \"date\": \"2023-01-01T00:00:00\"\n  }\n",
+                "raw": "\n  {\n    \n    \"amount\": 222.0,\n    \"accountOrigin\": 3,\n    \"accountDestination\": 4,\n    \"date\": \"2023-01-01T00:00:00\"\n  }\n",
                 "form": []
             },
             "tests": []
@@ -246,16 +246,16 @@
             "colId": "1f336a45-7f2a-44fd-8379-799be1e99713",
             "containerId": "deea1c84-dc00-4fb7-ab72-ba948670a736",
             "name": "updateFullUser",
-            "url": "localhost:8080/api/account/1",
+            "url": "localhost:8080/api/account/3",
             "method": "PUT",
             "sortNum": 50000,
             "created": "2023-12-03T04:06:55.860Z",
-            "modified": "2023-12-03T05:55:31.908Z",
+            "modified": "2023-12-03T16:08:57.997Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "  {\n    \"id\": 1,\n    \"name\": \"nombre\",\n    \"cbu\": \"nrocbu\",\n    \"alias\": \"alias.alias.alias\",\n    \"amount\": 555555555,\n    \"owner\": null\n  }",
+                "raw": "{\n  \"id\": 3,\n  \"name\": \"nombre\",\n  \"cbu\": \"nrocbu\",\n  \"alias\": \"alias.alias.alias\",\n  \"amount\": 5.55555555E8,\n  \"owner\": {\n    \"id\": 1,\n    \"username\": \"prueba\",\n    \"password\": \"password\",\n    \"email\": \"correo@gmail.com\",\n    \"dni\": \"30000000\",\n    \"address\": \"adress 123\",\n    \"birthday_date\": \"2000-01-01T00:00:00.000+00:00\",\n    \"created_at\": \"2023-12-03T05:44:09.019354\",\n    \"updated_at\": \"2023-12-03T06:14:45.522741\"\n  }\n}\n  \n    ",
                 "form": []
             },
             "tests": []
@@ -288,12 +288,12 @@
             "method": "PUT",
             "sortNum": 50000,
             "created": "2023-12-03T05:43:51.365Z",
-            "modified": "2023-12-03T05:59:25.061Z",
+            "modified": "2023-12-03T09:19:35.259Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"id\": 99,\n  \"amount\": 2252.0,\n  \"accountOrigin\": 1,\n  \"accountDestination\": 2,\n  \"date\": \"2023-01-01T00:00:00\"\n}",
+                "raw": "  {\n    \"id\": 99,\n    \"amount\": 2252.0,\n    \"accountOrigin\": 3,\n    \"accountDestination\": 4,\n    \"date\": \"2023-01-01T00:00:00\"\n  }",
                 "form": []
             },
             "tests": []
@@ -317,11 +317,11 @@
             "colId": "1f336a45-7f2a-44fd-8379-799be1e99713",
             "containerId": "deea1c84-dc00-4fb7-ab72-ba948670a736",
             "name": "deleteAccount",
-            "url": "localhost:8080/api/users/2",
+            "url": "localhost:8080/api/account/1",
             "method": "DELETE",
             "sortNum": 60000,
             "created": "2023-12-03T04:06:55.861Z",
-            "modified": "2023-12-03T04:06:55.857Z",
+            "modified": "2023-12-03T09:16:36.621Z",
             "headers": [],
             "params": [],
             "tests": []
@@ -350,6 +350,20 @@
             "sortNum": 60000,
             "created": "2023-12-03T05:43:51.366Z",
             "modified": "2023-12-03T05:59:44.259Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "f500da4e-8fef-433b-abd0-fb6e12068d24",
+            "colId": "1f336a45-7f2a-44fd-8379-799be1e99713",
+            "containerId": "b46e361e-5990-41d1-83e7-8c5a3e56fa67",
+            "name": "getAllLoansByUserId",
+            "url": "localhost:8080/api/loan/user/1",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2023-12-03T08:10:45.219Z",
+            "modified": "2023-12-03T16:29:19.198Z",
             "headers": [],
             "params": [],
             "tests": []

@@ -30,8 +30,7 @@ public class LoanController {
     //  obtener todos los préstamos de un Usuario
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<LoanDto>> getAllLoansByUserId(@PathVariable Long userId) {
-        List<LoanDto> loans = loanService.getAllLoans();
-        loans = loans.stream().filter(loanDto -> loanDto.getAccount().getOwner().getId().equals(userId)).collect(Collectors.toList());
+        List<LoanDto> loans = loanService.getAllLoansByUserId(userId);
         return new ResponseEntity<>(loans, HttpStatus.OK);
     }
 
