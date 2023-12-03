@@ -23,8 +23,14 @@ public class AccountController {
 
     // Obtener una lista de cuentas registrados
     @GetMapping
-    public ResponseEntity<List<AccountDto>> getAllAccount(){
-        return ResponseEntity.status(HttpStatus.OK).body(service.getAllAccount());
+    public ResponseEntity<List<AccountDto>> getAllAccounts() {
+        try {
+            List<AccountDto> accounts = service.getAllAccount();
+            return ResponseEntity.ok(accounts);
+        } catch (Exception e) {
+            // Log the exception or handle it as needed
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // Obtener la info de un solo cuenta
