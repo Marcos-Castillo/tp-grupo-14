@@ -80,12 +80,17 @@ public class LoanService {
                 Account existingAccount = accountRepository.findById(accountId).get();
                 if (amountToPay>0 && amountToPay <=existingAccount.getAmount())
                 {
-                    existingLoan.setAmount((existingLoan.getAmount()*existingLoan.getInterest())-amountToPay);
+                    Double loanAmount=(existingLoan.getAmount()*existingLoan.getInterest());
+                    loanAmount = loanAmount-amountToPay;
+                    existingLoan.setAmount(loanAmount>0?loanAmount:0);
                     existingLoan.setDues(existingLoan.getDues()-1);
                     existingAccount.setAmount(existingAccount.getAmount()-amountToPay);
+                    if (!(existingLoan.getAmount()>0)){
+                        existingLoan.setStatus(StatusLoan.FINISHED);
+                    }
                     accountRepository.save(existingAccount);
                     repository.save(existingLoan);
-                    return "El préstamo con id: " + loanId + " ha sido abonado "+amountToPay+" desde cuenta "+accountId ;
+                    return "El préstamo con id: " + loanId + " ha sido abonado "+amountToPay+" desde cuenta "+accountId+" El estado es "+existingLoan.getStatus().name() ;
                 }
             }
             return "La cuenta con id: " + accountId + ", no existe o tiene saldo insuficiente.";
