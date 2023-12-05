@@ -26,6 +26,9 @@ public class Loan {
     @Column(name = "cuotas")
     private Long dues;
 
+    @Column(name = "valor_cuotas")
+    private Double duesAmount;
+
     @Column(name = "fecha_prestamo")
     private LocalDateTime date;
 

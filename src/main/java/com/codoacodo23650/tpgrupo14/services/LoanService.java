@@ -51,6 +51,7 @@ public class LoanService {
         Loan loanToSave = LoanMapper.dtoToLoan(loan);
         loanToSave.setCreated_at(LocalDateTime.now());
         loanToSave.setUpdated_at(LocalDateTime.now());
+        loanToSave.setDuesAmount((loan.getAmount() * (1 + (loan.getInterest() / 100))) / loan.getDues());
         loanToSave.setStatus(StatusLoan.PENDING);
         account.setAmount(account.getAmount()+loan.getAmount());
         accountRepository.save(account);

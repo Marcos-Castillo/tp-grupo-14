@@ -17,6 +17,7 @@ public class LoanDto {
     private Double amount;
     private Double interest;
     private Long dues;
+    private Double duesAmount;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
     private StatusLoan status;
