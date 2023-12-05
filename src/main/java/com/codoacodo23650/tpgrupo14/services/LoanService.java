@@ -78,7 +78,10 @@ public class LoanService {
             {
                 Loan existingLoan = repository.findById(loanId).get();
                 Account existingAccount = accountRepository.findById(accountId).get();
-                if (amountToPay>0 && amountToPay <=existingAccount.getAmount())
+                if (existingLoan.getAmount()>=0){
+                    return "El préstamo con id: " + loanId + " ha sido abonado El estado es "+existingLoan.getStatus().name() ;
+                }
+                if (amountToPay > 0 && amountToPay <= existingAccount.getAmount())
                 {
                     Double loanAmount=(existingLoan.getAmount()*existingLoan.getInterest());
                     loanAmount = loanAmount-amountToPay;
