@@ -3,10 +3,10 @@ package com.codoacodo23650.tpgrupo14.services;
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
+import com.codoacodo23650.tpgrupo14.exceptions.UserNotFoundException;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
-import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.codoacodo23650.tpgrupo14.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +16,11 @@ import java.util.stream.Collectors;
 public class LoanService {
 
     private final LoanRepository repository;
+    private final UserRepository userRepository;
 
-    public LoanService(LoanRepository loanRepository) {
+    public LoanService(LoanRepository loanRepository, UserRepository userRepository) {
         this.repository = loanRepository;
+        this.userRepository = userRepository;
     }
 
     public List<LoanDto> getAllLoans() {
@@ -27,6 +29,12 @@ public class LoanService {
                 .collect(Collectors.toList());
     }
     public List<LoanDto> getAllLoansByUserId(Long userId) {
+
+        Boolean idExist = userRepository.existsById(userId);
+        if(!idExist) throw new UserNotFoundException("El usuario con id " + userId + " no existe.");
+
+
+
         return repository.findLoansByUserId(userId).stream()
                 .map(LoanMapper::loanToDto)
                 .collect(Collectors.toList());
