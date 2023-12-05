@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 public class ClientLoanDto {
     private Long id;
     private Long dues;
-    private double dueAmmount;
     private Long pendDues;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;

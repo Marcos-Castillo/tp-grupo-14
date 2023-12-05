@@ -1,6 +1,7 @@
 package com.codoacodo23650.tpgrupo14.entities;
 
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +20,6 @@ public class ClientLoan {
     @Column(name = "total_cuotas")
     private Long dues;
 
-    @Column(name="valor_cuota")
-    private double dueAmmount;
-
     @Column(name = "cuotas_pendientes")
     private Long pendDues;
 
@@ -34,22 +32,13 @@ public class ClientLoan {
     @Column(name = "fecha_actualizacion")
     private LocalDateTime updated_at;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_account")
     private Account account;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_loan")
     private Loan loan;
-
-    public void payDue(){
-        if(status != StatusLoan.FINISHED && status != StatusLoan.REFUSED){
-            if (this.account.getAmount() < this.dueAmmount) {
-                this.pendDues -= 1;
-                if (pendDues == 0L){
-                    status=StatusLoan.FINISHED;
-                }
-            }
-        }
-    }
 }

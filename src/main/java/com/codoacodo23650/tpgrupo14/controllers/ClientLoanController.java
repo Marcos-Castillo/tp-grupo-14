@@ -52,10 +52,4 @@ public class ClientLoanController {
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteClientLoan(id));
     }
 
-    // Cancelar una cuota
-    @PutMapping(value = "/pay/{id}")
-    public ResponseEntity<ClientLoanDto> payDue(@PathVariable Long id, @RequestBody ClientLoanDto dto){
-        return ResponseEntity.status(HttpStatus.OK).body(service.payClientLoanDue(id, dto));
-    }
-
 }
