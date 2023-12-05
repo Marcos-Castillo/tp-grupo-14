@@ -1,10 +1,12 @@
 package com.codoacodo23650.tpgrupo14.services;
 
+import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
 import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
+import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,12 @@ import java.util.stream.Collectors;
 public class LoanService {
 
     private final LoanRepository repository;
+    private final AccountRepository accountRepository;
 
-    public LoanService(LoanRepository loanRepository) {
+    public LoanService(LoanRepository loanRepository,AccountRepository accountRepository) {
+
         this.repository = loanRepository;
+        this.accountRepository = accountRepository;
     }
 
     public List<LoanDto> getAllLoans() {
@@ -65,5 +70,28 @@ public class LoanService {
         }
 
 
+    }
+
+    public String payment(Long loanId, Double amountToPay, Long accountId) {
+        if (repository.existsById(loanId)){
+            if (accountRepository.existsById(accountId))
+            {
+                Loan existingLoan = repository.findById(loanId).get();
+                Account existingAccount = accountRepository.findById(accountId).get();
+                if (amountToPay>0 && amountToPay <=existingAccount.getAmount())
+                {
+                    existingLoan.setAmount((existingLoan.getAmount()*existingLoan.getInterest())-amountToPay);
+                    existingLoan.setDues(existingLoan.getDues()-1);
+                    existingAccount.setAmount(existingAccount.getAmount()-amountToPay);
+                    accountRepository.save(existingAccount);
+                    repository.save(existingLoan);
+                    return "El préstamo con id: " + loanId + " ha sido abonado "+amountToPay+" desde cuenta "+accountId ;
+                }
+            }
+            return "La cuenta con id: " + accountId + ", no existe o tiene saldo insuficiente.";
+
+        } else {
+            return "El préstamo con id: " + loanId + ", no existe .";
+        }
     }
 }
