@@ -36,4 +36,7 @@ public class Loan {
     @JoinColumn(name = "account_id")
     private Account account;
 
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+
 }

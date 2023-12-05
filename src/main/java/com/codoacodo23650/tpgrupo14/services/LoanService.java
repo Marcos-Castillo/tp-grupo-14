@@ -4,6 +4,7 @@ import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
+import com.codoacodo23650.tpgrupo14.exceptions.AccountNotFoundException;
 import com.codoacodo23650.tpgrupo14.exceptions.LoanDueException;
 import com.codoacodo23650.tpgrupo14.exceptions.StatusInvalidException;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
@@ -13,6 +14,7 @@ import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,8 +47,13 @@ public class LoanService {
     }
 
     public LoanDto createLoan(LoanDto loan) {
+        Account account = accountRepository.findById(loan.getAccount().getId()).orElseThrow(() -> new AccountNotFoundException("Cuenta inexistente."));
         Loan loanToSave = LoanMapper.dtoToLoan(loan);
+        loanToSave.setCreated_at(LocalDateTime.now());
+        loanToSave.setUpdated_at(LocalDateTime.now());
         loanToSave.setStatus(StatusLoan.PENDING);
+        account.setAmount(account.getAmount()+loan.getAmount());
+        accountRepository.save(account);
         return LoanMapper.loanToDto(repository.save(loanToSave));
     }
 
@@ -59,7 +66,7 @@ public class LoanService {
         if (loanDetails.getDues() != null) existingLoan.setDues(loanDetails.getDues());
         if (loanDetails.getDate() != null) existingLoan.setDate(loanDetails.getDate());
         if (loanDetails.getStatus() != null) existingLoan.setStatus(loanDetails.getStatus());
-
+        existingLoan.setUpdated_at(LocalDateTime.now());
         return LoanMapper.loanToDto( repository.save(existingLoan));
     }
 
@@ -93,6 +100,7 @@ public class LoanService {
                             }
                             existingAccount.setAmount(existingAccount.getAmount() - amountToPay);
                             accountRepository.save(existingAccount);
+                            existingLoan.setUpdated_at(LocalDateTime.now());
                             repository.save(existingLoan);
                             return "El préstamo con id: " + loanId + " ha sido abonado " + amountToPay + " desde cuenta " + accountId;
                         } else {

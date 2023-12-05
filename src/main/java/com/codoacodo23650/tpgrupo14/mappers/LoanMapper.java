@@ -17,6 +17,8 @@ public class LoanMapper {
                 .dues(loan.getDues())
                 .date(loan.getDate())
                 .account(loan.getAccount())
+                .created_at(loan.getCreated_at())
+                .updated_at(loan.getUpdated_at())
                 .build();
     }
 
@@ -28,7 +30,9 @@ public class LoanMapper {
                 (dto.getDues()),
                 (dto.getDate()),
                 (dto.getStatus()),
-                (dto.getAccount())
+                (dto.getAccount()),
+                (dto.getCreated_at()),
+                (dto.getUpdated_at())
                 );
     }
 }
