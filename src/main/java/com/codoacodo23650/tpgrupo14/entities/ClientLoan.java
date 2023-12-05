@@ -19,6 +19,9 @@ public class ClientLoan {
     @Column(name = "total_cuotas")
     private Long dues;
 
+    @Column(name="valor_cuota")
+    private double dueAmmount;
+
     @Column(name = "cuotas_pendientes")
     private Long pendDues;
 
@@ -38,4 +41,15 @@ public class ClientLoan {
     @ManyToOne
     @JoinColumn(name = "id_loan")
     private Loan loan;
+
+    public void payDue(){
+        if(status != StatusLoan.FINISHED && status != StatusLoan.REFUSED){
+            if (this.account.getAmount() < this.dueAmmount) {
+                this.pendDues -= 1;
+                if (pendDues == 0L){
+                    status=StatusLoan.FINISHED;
+                }
+            }
+        }
+    }
 }

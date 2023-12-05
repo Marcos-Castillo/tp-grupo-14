@@ -41,9 +41,9 @@ public class AccountController {
 
     // Crear/Registrar un cuenta
 
-    @PostMapping(value = "/{userId}")
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto account, @PathVariable Long userId){
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createAccount(account, userService.getUserById(userId)));
+    @PostMapping
+    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto account){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createAccount(account));
     }
 
     // Modificar un cuenta (PUT)

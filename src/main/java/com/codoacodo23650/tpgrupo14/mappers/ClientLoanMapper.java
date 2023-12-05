@@ -15,6 +15,7 @@ public class ClientLoanMapper {
         clientLoan.setUpdated_at(dto.getUpdated_at());
         clientLoan.setAccount(dto.getAccount());
         clientLoan.setLoan(dto.getLoan());
+        clientLoan.setDueAmmount(dto.getDueAmmount());
         return clientLoan;
     }
 
@@ -28,6 +29,7 @@ public class ClientLoanMapper {
         dto.setUpdated_at(loan.getUpdated_at());
         dto.setAccount(loan.getAccount());
         dto.setLoan(loan.getLoan());
+        dto.setDueAmmount(loan.getDueAmmount());
         return dto;
     }
 }
