@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "API COC 23650",
-    "dateExported": "2023-12-05T12:07:19.092Z",
+    "dateExported": "2023-12-05T13:15:42.558Z",
     "version": "1.1",
     "folders": [
         {
@@ -299,17 +299,17 @@
             "_id": "7702f649-9d74-4f30-bada-2aecd47871bc",
             "colId": "1f336a45-7f2a-44fd-8379-799be1e99713",
             "containerId": "deea1c84-dc00-4fb7-ab72-ba948670a736",
-            "name": "updateFullUser",
+            "name": "updateFullAccount",
             "url": "localhost:8080/api/account/3",
             "method": "PUT",
             "sortNum": 50000,
             "created": "2023-12-03T04:06:55.860Z",
-            "modified": "2023-12-03T16:08:57.997Z",
+            "modified": "2023-12-05T13:08:53.155Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"id\": 3,\n  \"name\": \"nombre\",\n  \"cbu\": \"nrocbu\",\n  \"alias\": \"alias.alias.alias\",\n  \"amount\": 5.55555555E8,\n  \"owner\": {\n    \"id\": 1,\n    \"username\": \"prueba\",\n    \"password\": \"password\",\n    \"email\": \"correo@gmail.com\",\n    \"dni\": \"30000000\",\n    \"address\": \"adress 123\",\n    \"birthday_date\": \"2000-01-01T00:00:00.000+00:00\",\n    \"created_at\": \"2023-12-03T05:44:09.019354\",\n    \"updated_at\": \"2023-12-03T06:14:45.522741\"\n  }\n}\n  \n    ",
+                "raw": "{\n  \"id\": 3,\n  \"name\": \"nombre\",\n  \"cbu\": \"nrocbu\",\n  \"alias\": \"alias.alias.alias\",\n  \"amount\": 555555555,\n  \"owner\": {\n    \"id\": 1,\n    \"username\": \"prueba\",\n    \"password\": \"password\",\n    \"email\": \"correo@gmail.com\",\n    \"dni\": \"30000000\",\n    \"address\": \"adress 123\",\n    \"birthday_date\": \"2000-01-01T00:00:00.000+00:00\",\n    \"created_at\": \"2023-12-03T05:44:09.019354\",\n    \"updated_at\": \"2023-12-03T06:14:45.522741\"\n  }\n}\n  \n    ",
                 "form": []
             },
             "tests": []
@@ -442,6 +442,25 @@
             "tests": []
         },
         {
+            "_id": "6b93e37a-5230-44d7-9355-4b0b7433aaa8",
+            "colId": "1f336a45-7f2a-44fd-8379-799be1e99713",
+            "containerId": "b46e361e-5990-41d1-83e7-8c5a3e56fa67",
+            "name": "payment",
+            "url": "localhost:8080/api/loan/payment",
+            "method": "POST",
+            "sortNum": 65000,
+            "created": "2023-12-05T12:43:07.946Z",
+            "modified": "2023-12-05T13:07:56.420Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n\"loanId\":4,\n\"amountToPay\":1,\n\"accountId\":3\n\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
             "_id": "f500da4e-8fef-433b-abd0-fb6e12068d24",
             "colId": "1f336a45-7f2a-44fd-8379-799be1e99713",
             "containerId": "b46e361e-5990-41d1-83e7-8c5a3e56fa67",
@@ -450,7 +469,7 @@
             "method": "GET",
             "sortNum": 70000,
             "created": "2023-12-03T08:10:45.219Z",
-            "modified": "2023-12-03T16:29:19.198Z",
+            "modified": "2023-12-05T12:13:40.031Z",
             "headers": [],
             "params": [],
             "tests": []
