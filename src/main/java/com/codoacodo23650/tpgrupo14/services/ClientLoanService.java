@@ -36,7 +36,7 @@ public class ClientLoanService {
     }
 
     public ClientLoanDto getClientLoanById(Long id) {
-        ClientLoan entity = repository.findById(id).get();
+        ClientLoan entity = repository.findById(id).orElseThrow(() -> new ClientLoanNotFoundException("ClientLoan not found."));
         return ClientLoanMapper.clientLoanToDto(entity);
     }
 
