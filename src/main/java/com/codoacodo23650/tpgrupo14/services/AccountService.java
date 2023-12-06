@@ -42,7 +42,7 @@ public class AccountService {
             //logica del Patch
             if (accountDto.getAlias() != null) accounToModify.setAlias(accountDto.getAlias());
             if (accountDto.getCbu() != null) accounToModify.setCbu(accountDto.getCbu());
-            if (accountDto.getName() != null) accounToModify.setName(accountDto.getName());
+            //if (accountDto.getName() != null) accounToModify.setName(accountDto.getName());
             if (accountDto.getAmount() != null) accounToModify.setAmount(accountDto.getAmount());
             if (accountDto.getOwner() != null) accounToModify.setOwner(accountDto.getOwner());
 
@@ -57,4 +57,5 @@ public class AccountService {
         repository.deleteById(id);
         return "Cuenta eliminada";
     }
+
 }

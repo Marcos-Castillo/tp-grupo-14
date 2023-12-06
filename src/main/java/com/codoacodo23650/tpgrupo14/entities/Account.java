@@ -1,5 +1,6 @@
 package com.codoacodo23650.tpgrupo14.entities;
 
+import com.codoacodo23650.tpgrupo14.entities.enums.AccountType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,8 +19,11 @@ public class Account {
     @Column(name = "cuenta_id")
     private Long id;
 
-    @Column(name = "nombre")
-    private String name;
+    @Column(name = "tipo_cuenta")
+    private AccountType type;
+
+    //@Column(name = "nombre")
+    //private String name;
 
     @Column(name = "cbu")
     private String cbu;
@@ -32,7 +36,7 @@ public class Account {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "usuario_id")
     private User owner;
 }
 

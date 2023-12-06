@@ -9,7 +9,8 @@ public class AccountMapper {
     public AccountDto accountToDto(Account account) {
         return AccountDto.builder()
                 .id(account.getId())
-                .name(account.getName())
+                .type(account.getType())
+                //.name(account.getName())
                 .cbu(account.getCbu())
                 .alias(account.getAlias())
                 .amount(account.getAmount())
@@ -19,14 +20,13 @@ public class AccountMapper {
 
     public Account dtoToAccount(AccountDto dto) {
         return new Account(
-                dto.getId(),
-                dto.getName(),
-                dto.getCbu(),
-                dto.getAlias(),
-                dto.getAmount(),
-                dto.getOwner()
-
-        );
-
+                (dto.getId()),
+                (dto.getType()),
+                //(dto.getName()),
+                (dto.getCbu()),
+                (dto.getAlias()),
+                (dto.getAmount()),
+                (dto.getOwner())
+                );
     }
 }
