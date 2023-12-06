@@ -2,6 +2,7 @@ package com.codoacodo23650.tpgrupo14.controllers;
 
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
+import com.codoacodo23650.tpgrupo14.entities.dtos.PaymentRequest;
 import com.codoacodo23650.tpgrupo14.services.LoanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,5 +62,19 @@ public class LoanController {
     public ResponseEntity<String> deleteLoan(@PathVariable Long loanId) {
         return ResponseEntity.status(HttpStatus.OK).body(loanService.deleteLoan(loanId))
                 ;
+    }
+
+    // pagar - reste el monto y descuente una cuota
+    // Pagar una cuota de un préstamo de cliente
+    @PostMapping(value = "/payment")
+    public ResponseEntity<String> payment(@RequestBody PaymentRequest paymentRequest) {
+                Long loanId = paymentRequest.getLoanId();
+        Double amountToPay = paymentRequest.getAmountToPay();
+        Long accountId = paymentRequest.getAccountId();
+
+        String mensaje =  loanService.payment( loanId,  amountToPay,  accountId);
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(mensaje);
     }
 }

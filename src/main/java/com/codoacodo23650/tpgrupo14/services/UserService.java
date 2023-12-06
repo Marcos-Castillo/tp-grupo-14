@@ -25,13 +25,15 @@ public class UserService {
 
     public List<UserDto> getUsers(){
         List<User> users = repository.findAll();
-        return users.stream()
+        List<UserDto> usersDtos = users.stream()
                 .map(UserMapper::userToDto)
                 .collect(Collectors.toList());
+        return usersDtos;
     }
 
     public UserDto getUserById(Long id){
         User user = repository.findById(id).get();
+        user.setPassword("******");
         return UserMapper.userToDto(user);
     }
 
@@ -39,8 +41,14 @@ public class UserService {
         User entity = UserMapper.dtoTouser(user);
         entity.setCreated_at(LocalDateTime.now());
         User entitySaved = repository.save(entity);
-        return UserMapper.userToDto(entitySaved);
+        user = UserMapper.userToDto(entitySaved);
+        user.setPassword("******");
+        return user;
     }
+
+    private LocalDateTime created_at;
+
+    private LocalDateTime updated_at;
 
     public String deleteUser(Long id){
         if (repository.existsById(id)){
