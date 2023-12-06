@@ -4,6 +4,7 @@ import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.dtos.AccountDto;
 import com.codoacodo23650.tpgrupo14.services.AccountService;
+import com.codoacodo23650.tpgrupo14.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +16,24 @@ import java.util.List;
 @RequestMapping("/api/account")
 public class AccountController {
 
-    // Necesito obtener una instancia del servicio de cuentas
     @Autowired
     private AccountService service;
+    @Autowired
+    private UserService userService;
 
     // Obtener una lista de cuentas registrados
-
     @GetMapping
-    public ResponseEntity<List<AccountDto>> getAllAccount(){
-        return ResponseEntity.status(HttpStatus.OK).body(service.getAllAccount());
+    public ResponseEntity<List<AccountDto>> getAllAccounts() {
+        try {
+            List<AccountDto> accounts = service.getAllAccount();
+            return ResponseEntity.ok(accounts);
+        } catch (Exception e) {
+            // Log the exception or handle it as needed
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // Obtener la info de un solo cuenta
-
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.getAccountById(id));
@@ -49,7 +54,7 @@ public class AccountController {
     }
 
     // Eliminar un cuenta
-
+    //TODO:borrado logico
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteAccount(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteAccount(id));

@@ -1,53 +1,80 @@
 package com.codoacodo23650.tpgrupo14.controllers;
 
+import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
+import com.codoacodo23650.tpgrupo14.entities.dtos.PaymentRequest;
 import com.codoacodo23650.tpgrupo14.services.LoanService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/loans")
+@RequestMapping("/api/loan")
 public class LoanController {
-    @Autowired
-    private LoanService service;
 
-    // Obtener una lista de prestamos registrados
+    private final LoanService loanService;
 
+    public LoanController(LoanService loanService) {
+        this.loanService = loanService;
+    }
+
+    //  obtener todos los préstamos
     @GetMapping
-    public ResponseEntity<List<LoanDto>> getLoans(){
-        return ResponseEntity.status(HttpStatus.OK).body(service.getLoans());
+    public ResponseEntity<List<LoanDto>> getAllLoans() {
+        List<LoanDto> loans = loanService.getAllLoans();
+        return new ResponseEntity<>(loans, HttpStatus.OK);
     }
 
-    // Obtener la info de un solo prestamo
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<LoanDto> getLoanById(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(service.getLoanById(id));
+    //  obtener todos los préstamos de un Usuario
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<LoanDto>> getAllLoansByUserId(@PathVariable Long userId) {
+        List<LoanDto> loans = loanService.getAllLoansByUserId(userId);
+        return new ResponseEntity<>(loans, HttpStatus.OK);
     }
 
-    // Crear/Registrar un prestamo
-
-    @PostMapping
-    public ResponseEntity<LoanDto> createLoan(@RequestBody LoanDto loan){
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createLoan(loan));
+    //  obtener un préstamo por ID
+    @GetMapping("/{loanId}")
+    public ResponseEntity<LoanDto> getLoanById(@PathVariable Long loanId) {
+        LoanDto loan = loanService.getLoanById(loanId);
+        return new ResponseEntity<>(loan, HttpStatus.OK);
     }
 
-    // Modificar un prestamo
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<LoanDto> updateLoan(@PathVariable Long id, @RequestBody LoanDto loanDto)
-    {
-        return ResponseEntity.status(HttpStatus.OK).body(service.updateLoan(id, loanDto));
+    //  crear un nuevo préstamo
+    @PostMapping()
+    public ResponseEntity<LoanDto> createLoan(@RequestBody LoanDto loan) {
+        LoanDto createdLoan = loanService.createLoan(loan);
+        return new ResponseEntity<>(createdLoan, HttpStatus.CREATED);
     }
 
-    // Eliminar un prestamo
-
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<String> deleteLoan(@PathVariable Long id){
-        return ResponseEntity.status(HttpStatus.OK).body(service.deleteLoan(id));
+    //  actualizar un préstamo existente
+    @PutMapping("/{loanId}")
+    public ResponseEntity<LoanDto> updateLoan(@PathVariable Long loanId, @RequestBody LoanDto loanDetails) {
+        LoanDto updatedLoan = loanService.updateLoan(loanId, loanDetails);
+        return new ResponseEntity<>(updatedLoan, HttpStatus.OK);
     }
 
+    //  eliminar un préstamo
+    // TODO:borrado logico
+    @DeleteMapping("/{loanId}")
+    public ResponseEntity<String> deleteLoan(@PathVariable Long loanId) {
+        return ResponseEntity.status(HttpStatus.OK).body(loanService.deleteLoan(loanId))
+                ;
+    }
+
+    // pagar - reste el monto y descuente una cuota
+    // Pagar una cuota de un préstamo de cliente
+    @PostMapping(value = "/payment")
+    public ResponseEntity<String> payment(@RequestBody PaymentRequest paymentRequest) {
+                Long loanId = paymentRequest.getLoanId();
+        Double amountToPay = paymentRequest.getAmountToPay();
+        Long accountId = paymentRequest.getAccountId();
+
+        String mensaje =  loanService.payment( loanId,  amountToPay,  accountId);
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(mensaje);
+    }
 }

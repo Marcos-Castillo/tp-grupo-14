@@ -41,6 +41,7 @@ public class TransferController {
     }
 
     // Eliminar una transferencia
+    //TODO:borrado logico
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteTransfer(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteTransfer(id));

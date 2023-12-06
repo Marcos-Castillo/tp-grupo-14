@@ -7,6 +7,7 @@ import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -27,8 +28,10 @@ public class AccountService {
     }
 
     public List<AccountDto> getAllAccount() {
-
-        return List.of(AccountDto.builder().build());
+        List<Account> cuentas = repository.findAll();
+        return cuentas.stream()
+                .map(AccountMapper::accountToDto)
+                .collect(Collectors.toList());
     }
 
     public AccountDto updateAccount(Long id, AccountDto accountDto) {
@@ -37,22 +40,14 @@ public class AccountService {
             //validar que datos no vienen null parea setear en el objeto
 
             //logica del Patch
-            if (accountDto.getAlias() != null){
-                accounToModify.setAlias(accountDto.getAlias());
-            }
-            if (accountDto.getCbu() != null){
-                accounToModify.setCbu(accountDto.getCbu());
-            }
-            if (accountDto.getName() != null){
-                accounToModify.setName(accountDto.getName());
-            }
-            if (accountDto.getAmount() != null){
-                accounToModify.setAmount(accountDto.getAmount());
-            }
-            if (accountDto.getOwner() != null){
-                accounToModify.setOwner(accountDto.getOwner());
-            }
+            if (accountDto.getAlias() != null) accounToModify.setAlias(accountDto.getAlias());
+            if (accountDto.getCbu() != null) accounToModify.setCbu(accountDto.getCbu());
+            if (accountDto.getName() != null) accounToModify.setName(accountDto.getName());
+            if (accountDto.getAmount() != null) accounToModify.setAmount(accountDto.getAmount());
+            if (accountDto.getOwner() != null) accounToModify.setOwner(accountDto.getOwner());
+
             Account accountModified = repository.save(accounToModify);
+
             return AccountMapper.accountToDto(accountModified);
         }
         return null;

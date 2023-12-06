@@ -18,13 +18,15 @@ public class AccountMapper {
     }
 
     public Account dtoToAccount(AccountDto dto) {
-        return Account.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .cbu(dto.getCbu())
-                .alias(dto.getAlias())
-                .amount(dto.getAmount())
-                .owner(dto.getOwner())
-                .build();
+        return new Account(
+                dto.getId(),
+                dto.getName(),
+                dto.getCbu(),
+                dto.getAlias(),
+                dto.getAmount(),
+                dto.getOwner()
+
+        );
+
     }
 }

@@ -67,7 +67,7 @@ public class UserController {
      */
 
     // Eliminar un usuario
-
+    //TODO:borrado logico
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteUser(id));

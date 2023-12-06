@@ -4,8 +4,11 @@ import com.codoacodo23650.tpgrupo14.entities.ClientLoan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.ClientLoanDto;
 import lombok.experimental.UtilityClass;
 
+import java.util.stream.Collectors;
+
 @UtilityClass
 public class ClientLoanMapper {
+
     public ClientLoan dtoToClientLoan(ClientLoanDto dto){
         ClientLoan clientLoan = new ClientLoan();
         clientLoan.setDues(dto.getDues());

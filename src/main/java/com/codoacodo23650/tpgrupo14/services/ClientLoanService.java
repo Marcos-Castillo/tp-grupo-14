@@ -1,9 +1,16 @@
 package com.codoacodo23650.tpgrupo14.services;
 
+import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.ClientLoan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.ClientLoanDto;
+import com.codoacodo23650.tpgrupo14.entities.dtos.TransferDto;
+import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
+import com.codoacodo23650.tpgrupo14.exceptions.*;
+import com.codoacodo23650.tpgrupo14.mappers.AccountMapper;
 import com.codoacodo23650.tpgrupo14.mappers.ClientLoanMapper;
+import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import com.codoacodo23650.tpgrupo14.repositories.ClientLoanRepository;
+import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,9 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class ClientLoanService {
     private final ClientLoanRepository repository;
+    private final AccountRepository accountRepository;
+    private final LoanRepository loanRepository;
 
-    public ClientLoanService(ClientLoanRepository repository){
+    public ClientLoanService(ClientLoanRepository repository, AccountRepository accountRepository, LoanRepository loanRepository){
         this.repository = repository;
+        this.accountRepository = accountRepository;
+        this.loanRepository = loanRepository;
     }
     public List<ClientLoanDto> getClientLoans() {
         List<ClientLoan> client_loans = repository.findAll();
@@ -25,7 +36,7 @@ public class ClientLoanService {
     }
 
     public ClientLoanDto getClientLoanById(Long id) {
-        ClientLoan entity = repository.findById(id).get();
+        ClientLoan entity = repository.findById(id).orElseThrow(() -> new ClientLoanNotFoundException("ClientLoan not found."));
         return ClientLoanMapper.clientLoanToDto(entity);
     }
 
@@ -40,19 +51,61 @@ public class ClientLoanService {
     }
 
     public ClientLoanDto createClientLoan(ClientLoanDto dto) {
-
         dto.setCreated_at(LocalDateTime.now());
+        dto.setStatus(StatusLoan.PENDING);
         dto.setPendDues(dto.getDues());
-        ClientLoan newAccount = repository.save(ClientLoanMapper.dtoToClientLoan(dto));
-        return ClientLoanMapper.clientLoanToDto(newAccount);
+        if(accountRepository.existsById(dto.getAccount().getId())) {
+            if(loanRepository.existsById(dto.getLoan().getId())) {
+                ClientLoan newClientLoan = repository.save(ClientLoanMapper.dtoToClientLoan(dto));
+                return ClientLoanMapper.clientLoanToDto(newClientLoan);
+            } else {
+                throw new LoanNotFoundException("Loan not found.");
+            }
+        } else {
+            throw new AccountNotFoundException("Account not found.");
+        }
     }
 
     public ClientLoanDto updateClientLoan(Long id, ClientLoanDto dto) {
         if (repository.existsById(id)) {
             ClientLoan clientLoanToModify = repository.findById(id).get();
 
-            //clientLoanToModify.setAlias();
-            clientLoanToModify.setUpdated_at(LocalDateTime.now());
+            if(dto.getStatus() == StatusLoan.APPROVED || clientLoanToModify.getStatus() == StatusLoan.APPROVED) {
+                if(clientLoanToModify.getStatus() == StatusLoan.REFUSED)
+                {
+                    throw new StatusInvalidException("Invalid finished state.");
+                }
+
+                if (dto.getPendDues() != null) {
+                    if (dto.getPendDues() <= clientLoanToModify.getDues()) {
+                        clientLoanToModify.setPendDues(dto.getPendDues());
+                    }
+                    if(dto.getPendDues() == 0)
+                    {
+                        clientLoanToModify.setStatus(StatusLoan.FINISHED);
+                    }
+                }
+
+                if (dto.getStatus() != null) {
+                    if (dto.getStatus() == StatusLoan.APPROVED) {
+                        if (clientLoanToModify.getPendDues() == 0) {
+                            clientLoanToModify.setStatus(StatusLoan.FINISHED);
+                        } else {
+                            clientLoanToModify.setStatus(dto.getStatus());
+                        }
+                    }
+                }
+
+                clientLoanToModify.setUpdated_at(LocalDateTime.now());
+
+            }else{
+                if(dto.getStatus() == StatusLoan.REFUSED && clientLoanToModify.getStatus() == StatusLoan.PENDING)
+                {
+                    clientLoanToModify.setStatus(dto.getStatus());
+                }else{
+                        throw new StatusInvalidException("Invalid finished state.");
+                }
+            }
 
             ClientLoan clientLoanModified = repository.save(clientLoanToModify);
 

@@ -1,6 +1,7 @@
 package com.codoacodo23650.tpgrupo14.entities;
 
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,10 +32,12 @@ public class ClientLoan {
     @Column(name = "fecha_actualizacion")
     private LocalDateTime updated_at;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_account")
     private Account account;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "id_loan")
     private Loan loan;

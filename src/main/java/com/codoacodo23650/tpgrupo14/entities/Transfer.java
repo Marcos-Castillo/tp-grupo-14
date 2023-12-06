@@ -5,7 +5,7 @@
     import java.time.LocalDateTime;
 
     @Entity
-    @Table(name = "transferencias")
+    @Table(name = "TRASNFERENCIAS")
     @Getter
     @Setter
     @AllArgsConstructor
