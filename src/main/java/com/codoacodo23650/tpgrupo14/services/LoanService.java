@@ -36,6 +36,7 @@ public class LoanService {
                 .collect(Collectors.toList());
     }
     public List<LoanDto> getAllLoansByUserId(Long userId) {
+
         return repository.findLoansByUserId(userId).stream()
                 .map(LoanMapper::loanToDto)
                 .collect(Collectors.toList());
