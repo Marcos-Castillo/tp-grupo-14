@@ -8,6 +8,7 @@ import com.codoacodo23650.tpgrupo14.exceptions.AccountNotFoundException;
 import com.codoacodo23650.tpgrupo14.exceptions.LoanDueException;
 import com.codoacodo23650.tpgrupo14.exceptions.StatusInvalidException;
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.LoanBadRequestException;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
 import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
@@ -37,6 +38,8 @@ public class LoanService {
                 .collect(Collectors.toList());
     }
     public List<LoanDto> getAllLoansByUserId(Long userId) {
+        Boolean existId = repository.existsById(userId);
+        if(!existId) throw new UserNotFoundException("No se encontró un usuario con ese id");
 
         return repository.findLoansByUserId(userId).stream()
                 .map(LoanMapper::loanToDto)
@@ -49,14 +52,14 @@ public class LoanService {
     }
 
     public LoanDto createLoan(LoanDto loan) {
-        //ToDo check nulls values
-        if((loan.getAmount().isNaN())
-            ||(loan.getInterest().isNaN())
+
+        if((loan.getAmount()==null)
+            ||(loan.getInterest()==null)
             ||(loan.getDues()==null)
-            ||(loan.getDate()==null)
+            //||(loan.getDate()==null)
             ||(loan.getStatus()==null)
             ||(loan.getAccount()==null)
-        ) throw new LoanBadRequestException("Existen datos invalidos o nulos en la solicitud");
+        ) throw new LoanBadRequestException("Existen datos vacíos en la solicitud");
 
         Account account = accountRepository.findById(loan.getAccount().getId()).orElseThrow(() -> new AccountNotFoundException("Cuenta inexistente."));
         Loan loanToSave = LoanMapper.dtoToLoan(loan);
