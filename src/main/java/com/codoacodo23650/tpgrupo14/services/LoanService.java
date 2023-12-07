@@ -4,13 +4,17 @@ import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
+import com.codoacodo23650.tpgrupo14.exceptions.AccountNotFoundException;
+import com.codoacodo23650.tpgrupo14.exceptions.LoanDueException;
+import com.codoacodo23650.tpgrupo14.exceptions.StatusInvalidException;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.LoanBadRequestException;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
 import com.codoacodo23650.tpgrupo14.exceptions.*;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
 import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,6 +39,9 @@ public class LoanService {
                 .collect(Collectors.toList());
     }
     public List<LoanDto> getAllLoansByUserId(Long userId) {
+        Boolean existId = repository.existsById(userId);
+        if(!existId) throw new UserNotFoundException("No se encontró un usuario con ese id");
+
         return repository.findLoansByUserId(userId).stream()
                 .map(LoanMapper::loanToDto)
                 .collect(Collectors.toList());
@@ -46,6 +53,15 @@ public class LoanService {
     }
 
     public LoanDto createLoan(LoanDto loan) {
+
+        if((loan.getAmount()==null)
+            ||(loan.getInterest()==null)
+            ||(loan.getDues()==null)
+            //||(loan.getDate()==null)
+            ||(loan.getStatus()==null)
+            ||(loan.getAccount()==null)
+        ) throw new LoanBadRequestException("Existen datos vacíos en la solicitud");
+
         Account account = accountRepository.findById(loan.getAccount().getId()).orElseThrow(() -> new AccountNotFoundException("Cuenta inexistente."));
         Loan loanToSave = LoanMapper.dtoToLoan(loan);
         loanToSave.setCreated_at(LocalDateTime.now());
@@ -77,9 +93,10 @@ public class LoanService {
         } else {
             return "El préstamo con id: " + loanId + ", no ha sido eliminada";
         }
+
+
     }
 
-    @Transactional
     public String payment(Long loanId, Double amountToPay, Long accountId) {
         // controla existencia de Loan
         if (repository.existsById(loanId)){
