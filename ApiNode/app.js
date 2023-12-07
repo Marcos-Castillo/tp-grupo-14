@@ -28,3 +28,8 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor API iniciado en http://localhost:${port}`);
 });
+
+
+//npm install
+//npm install express
+//node app.js

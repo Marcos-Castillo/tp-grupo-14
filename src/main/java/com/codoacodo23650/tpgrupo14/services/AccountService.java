@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class AccountService {
 
-    private AccountRepository repository;
+    private final AccountRepository repository;
 
     public AccountService(AccountRepository repository){
         this.repository = repository;
@@ -28,8 +28,11 @@ public class AccountService {
             String alias = AliasService.getAliasFromApi(account.getName());
             if (!repository.existsByAlias(alias)) {
                 account.setAlias(alias);
+                if(account.getAmount() == null){
+                    account.setAmount((double) 0);
+                }
                 Account entitySaved = repository.save(account);
-                return AccountMapper.accountToDto(entitySaved);
+                                return AccountMapper.accountToDto(entitySaved);
             }
         }
         throw new RuntimeException("No se pudo generar un alias único después de varios intentos");
