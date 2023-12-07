@@ -54,17 +54,27 @@ public class UserService {
     private LocalDateTime updated_at;
 
     public String deleteUser(Long id){
-        if (repository.existsById(id)){
+
+        /*if (repository.existsById(id)){
             repository.deleteById(id);
             return "El usuario con id: " + id + " ha sido eliminado";
         } else {
             return "El usuario con id: " + id + ", no ha sido eliminado";
         }
+         */
+        if (!repository.existsById(id)){
+            throw new UserNotFoundException("No se encontró un usuario con ese id");
+        } else {
+            repository.deleteById(id);
+            return "El usuario con id: " + id + " ha sido eliminado";
+        }
+
     }
 
     public UserDto updateUser(Long id, UserDto dto){
         if(repository.existsById(id)){
-            User userToModify = repository.findById(id).get();
+            User userToModify = repository.findById(id)
+                    .orElseThrow(()-> new UserNotFoundException("No se encontró un usuario con ese id"));
             //validar que datos no vienen null parea setear en el objeto
 
             //logica del Patch
