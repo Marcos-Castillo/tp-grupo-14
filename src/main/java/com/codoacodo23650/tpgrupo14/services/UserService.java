@@ -1,6 +1,7 @@
 package com.codoacodo23650.tpgrupo14.services;
 
 import com.codoacodo23650.tpgrupo14.entities.User;
+import com.codoacodo23650.tpgrupo14.entities.Utils;
 import com.codoacodo23650.tpgrupo14.entities.dtos.UserDto;
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserBadRequestException;
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
@@ -9,6 +10,7 @@ import com.codoacodo23650.tpgrupo14.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,10 +44,11 @@ public class UserService {
         if(emailExist) throw new UserBadRequestException("Ya existe un usuario con ese email");
 
         User entity = UserMapper.dtoTouser(user);
+        entity.setPassword(Utils.hashPassword(user.getPassword()));
         entity.setCreated_at(LocalDateTime.now());
         User entitySaved = repository.save(entity);
         user = UserMapper.userToDto(entitySaved);
-        user.setPassword("******");
+
         return user;
     }
 
