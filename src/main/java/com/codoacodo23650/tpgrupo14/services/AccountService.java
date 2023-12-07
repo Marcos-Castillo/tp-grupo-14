@@ -21,12 +21,19 @@ public class AccountService {
         return AccountMapper.accountToDto(repository.findById(id).get());
     }
 
-    public AccountDto createAccount(AccountDto dtoAccount) {
-        Account acount = AccountMapper.dtoToAccount(dtoAccount);
-        Account entitySaved =  repository.save(acount);
-        return AccountMapper.accountToDto(entitySaved);
-    }
 
+    public AccountDto createAccount(AccountDto dtoAccount) {
+        Account account = AccountMapper.dtoToAccount(dtoAccount);
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            String alias = AliasService.getAliasFromApi(account.getName());
+            if (!repository.existsByAlias(alias)) {
+                account.setAlias(alias);
+                Account entitySaved = repository.save(account);
+                return AccountMapper.accountToDto(entitySaved);
+            }
+        }
+        throw new RuntimeException("No se pudo generar un alias único después de varios intentos");
+    }
     public List<AccountDto> getAllAccount() {
         List<Account> cuentas = repository.findAll();
         return cuentas.stream()
