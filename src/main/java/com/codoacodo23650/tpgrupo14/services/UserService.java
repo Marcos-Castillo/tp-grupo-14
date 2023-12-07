@@ -2,6 +2,7 @@ package com.codoacodo23650.tpgrupo14.services;
 
 import com.codoacodo23650.tpgrupo14.entities.User;
 import com.codoacodo23650.tpgrupo14.entities.dtos.UserDto;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserBadRequestException;
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
 import com.codoacodo23650.tpgrupo14.mappers.UserMapper;
 import com.codoacodo23650.tpgrupo14.repositories.UserRepository;
@@ -37,6 +38,9 @@ public class UserService {
     }
 
     public UserDto createUser(UserDto user){
+        Boolean emailExist = repository.existsByEmail(user.getEmail());
+        if(emailExist) throw new UserBadRequestException("Ya existe un usuario con ese email");
+
         User entity = UserMapper.dtoTouser(user);
         entity.setCreated_at(LocalDateTime.now());
         User entitySaved = repository.save(entity);
