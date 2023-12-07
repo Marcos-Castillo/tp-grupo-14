@@ -4,9 +4,7 @@ import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
-import com.codoacodo23650.tpgrupo14.exceptions.AccountNotFoundException;
-import com.codoacodo23650.tpgrupo14.exceptions.LoanDueException;
-import com.codoacodo23650.tpgrupo14.exceptions.StatusInvalidException;
+import com.codoacodo23650.tpgrupo14.exceptions.*;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
 import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
@@ -52,7 +50,7 @@ public class LoanService {
         Loan loanToSave = LoanMapper.dtoToLoan(loan);
         loanToSave.setCreated_at(LocalDateTime.now());
         loanToSave.setUpdated_at(LocalDateTime.now());
-        loanToSave.setDuesAmount((loan.getAmount() * (1 + (loan.getInterest() / 100))) / loan.getDues());
+        loanToSave.setDuesAmount(setDuesAmount(loanToSave));
         loanToSave.setStatus(StatusLoan.PENDING);
         account.setAmount(account.getAmount()+loan.getAmount());
         accountRepository.save(account);
@@ -79,9 +77,8 @@ public class LoanService {
         } else {
             return "El préstamo con id: " + loanId + ", no ha sido eliminada";
         }
-
-
     }
+
     @Transactional
     public String payment(Long loanId, Double amountToPay, Long accountId) {
         // controla existencia de Loan
@@ -112,7 +109,7 @@ public class LoanService {
                             // si el pago es distinto al valor de las cuotas, recalcula el importe
                             // de las mismas dividieno el saldo del Loan por las cuots pendientes
                             if (!amountToPay.equals(existingLoan.getDuesAmount())){
-                                existingLoan.setDuesAmount((existingLoan.getAmount() * (1 + (existingLoan.getInterest() / 100))) / existingLoan.getDues());
+                                existingLoan.setDuesAmount(setDuesAmount(existingLoan));
                             }
                             // guarda cuenta
                             accountRepository.save(existingAccount);
@@ -126,10 +123,13 @@ public class LoanService {
                     }
                 }
             }
-            return "La cuenta con id: " + accountId + ", no existe o tiene saldo insuficiente.";
-
+            throw new InsufficientFoundsException("La cuenta con id: " + accountId + ", no existe o tiene saldo insuficiente.");
         } else {
-            return "El préstamo con id: " + loanId + ", no existe .";
+            throw new LoanNotFoundException("El préstamo con id: " + loanId + ", no existe .");
         }
+    }
+
+    private Double setDuesAmount(Loan loan){
+        return (loan.getAmount() * (1 + (loan.getInterest() / 100))) / loan.getDues();
     }
 }
