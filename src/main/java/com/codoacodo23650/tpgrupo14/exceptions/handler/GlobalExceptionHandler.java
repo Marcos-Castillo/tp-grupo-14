@@ -1,6 +1,7 @@
 package com.codoacodo23650.tpgrupo14.exceptions.handler;
 
 import com.codoacodo23650.tpgrupo14.exceptions.dtos.ErrorMessageDto;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.LoanBadRequestException;
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserBadRequestException;
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,12 @@ public class  GlobalExceptionHandler {
     @ExceptionHandler(UserBadRequestException.class)
     @ResponseBody
     public ResponseEntity<ErrorMessageDto> badRequestHandler(HttpServletRequest req, Exception e){
+        return new ResponseEntity<>(new ErrorMessageDto(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(LoanBadRequestException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessageDto> loanBadRequestHandler(HttpServletRequest req, Exception e){
         return new ResponseEntity<>(new ErrorMessageDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
