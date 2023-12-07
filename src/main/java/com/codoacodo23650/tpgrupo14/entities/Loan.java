@@ -26,6 +26,9 @@ public class Loan {
     @Column(name = "cuotas")
     private Long dues;
 
+    @Column(name = "valor_cuotas")
+    private Double duesAmount;
+
     @Column(name = "fecha_prestamo")
     private LocalDateTime date;
 
@@ -35,5 +38,8 @@ public class Loan {
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
+
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 
 }

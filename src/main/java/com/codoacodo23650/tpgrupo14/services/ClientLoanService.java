@@ -8,7 +8,9 @@ import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
 import com.codoacodo23650.tpgrupo14.exceptions.*;
 import com.codoacodo23650.tpgrupo14.mappers.AccountMapper;
 import com.codoacodo23650.tpgrupo14.mappers.ClientLoanMapper;
+import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import com.codoacodo23650.tpgrupo14.repositories.ClientLoanRepository;
+import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,9 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class ClientLoanService {
     private final ClientLoanRepository repository;
+    private final AccountRepository accountRepository;
+    private final LoanRepository loanRepository;
 
-    public ClientLoanService(ClientLoanRepository repository){
+    public ClientLoanService(ClientLoanRepository repository, AccountRepository accountRepository, LoanRepository loanRepository){
         this.repository = repository;
+        this.accountRepository = accountRepository;
+        this.loanRepository = loanRepository;
     }
     public List<ClientLoanDto> getClientLoans() {
         List<ClientLoan> client_loans = repository.findAll();
@@ -30,7 +36,7 @@ public class ClientLoanService {
     }
 
     public ClientLoanDto getClientLoanById(Long id) {
-        ClientLoan entity = repository.findById(id).get();
+        ClientLoan entity = repository.findById(id).orElseThrow(() -> new ClientLoanNotFoundException("ClientLoan not found."));
         return ClientLoanMapper.clientLoanToDto(entity);
     }
 
@@ -48,8 +54,16 @@ public class ClientLoanService {
         dto.setCreated_at(LocalDateTime.now());
         dto.setStatus(StatusLoan.PENDING);
         dto.setPendDues(dto.getDues());
-        ClientLoan newClientLoan= repository.save(ClientLoanMapper.dtoToClientLoan(dto));
-        return ClientLoanMapper.clientLoanToDto(newClientLoan);
+        if(accountRepository.existsById(dto.getAccount().getId())) {
+            if(loanRepository.existsById(dto.getLoan().getId())) {
+                ClientLoan newClientLoan = repository.save(ClientLoanMapper.dtoToClientLoan(dto));
+                return ClientLoanMapper.clientLoanToDto(newClientLoan);
+            } else {
+                throw new LoanNotFoundException("Loan not found.");
+            }
+        } else {
+            throw new AccountNotFoundException("Account not found.");
+        }
     }
 
     public ClientLoanDto updateClientLoan(Long id, ClientLoanDto dto) {

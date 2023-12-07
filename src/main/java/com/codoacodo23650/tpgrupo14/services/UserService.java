@@ -2,15 +2,13 @@ package com.codoacodo23650.tpgrupo14.services;
 
 import com.codoacodo23650.tpgrupo14.entities.User;
 import com.codoacodo23650.tpgrupo14.entities.dtos.UserDto;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserBadRequestException;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
 import com.codoacodo23650.tpgrupo14.mappers.UserMapper;
 import com.codoacodo23650.tpgrupo14.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,22 +23,35 @@ public class UserService {
 
     public List<UserDto> getUsers(){
         List<User> users = repository.findAll();
-        return users.stream()
+        List<UserDto> usersDtos = users.stream()
                 .map(UserMapper::userToDto)
                 .collect(Collectors.toList());
+        return usersDtos;
     }
 
     public UserDto getUserById(Long id){
-        User user = repository.findById(id).get();
+        //User user = repository.findById(id).get();
+        User user = repository.findById(id)
+                .orElseThrow(()-> new UserNotFoundException("No se encontró un usuario con ese id"));
+        user.setPassword("******");
         return UserMapper.userToDto(user);
     }
 
     public UserDto createUser(UserDto user){
+        Boolean emailExist = repository.existsByEmail(user.getEmail());
+        if(emailExist) throw new UserBadRequestException("Ya existe un usuario con ese email");
+
         User entity = UserMapper.dtoTouser(user);
         entity.setCreated_at(LocalDateTime.now());
         User entitySaved = repository.save(entity);
-        return UserMapper.userToDto(entitySaved);
+        user = UserMapper.userToDto(entitySaved);
+        user.setPassword("******");
+        return user;
     }
+
+    private LocalDateTime created_at;
+
+    private LocalDateTime updated_at;
 
     public String deleteUser(Long id){
         if (repository.existsById(id)){

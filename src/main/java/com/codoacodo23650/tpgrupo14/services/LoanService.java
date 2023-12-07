@@ -4,6 +4,11 @@ import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.Loan;
 import com.codoacodo23650.tpgrupo14.entities.dtos.LoanDto;
 import com.codoacodo23650.tpgrupo14.entities.enums.StatusLoan;
+import com.codoacodo23650.tpgrupo14.exceptions.AccountNotFoundException;
+import com.codoacodo23650.tpgrupo14.exceptions.LoanDueException;
+import com.codoacodo23650.tpgrupo14.exceptions.StatusInvalidException;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.LoanBadRequestException;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
 import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
@@ -11,6 +16,7 @@ import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +38,9 @@ public class LoanService {
                 .collect(Collectors.toList());
     }
     public List<LoanDto> getAllLoansByUserId(Long userId) {
+        Boolean existId = repository.existsById(userId);
+        if(!existId) throw new UserNotFoundException("No se encontró un usuario con ese id");
+
         return repository.findLoansByUserId(userId).stream()
                 .map(LoanMapper::loanToDto)
                 .collect(Collectors.toList());
@@ -43,8 +52,23 @@ public class LoanService {
     }
 
     public LoanDto createLoan(LoanDto loan) {
+
+        if((loan.getAmount()==null)
+            ||(loan.getInterest()==null)
+            ||(loan.getDues()==null)
+            //||(loan.getDate()==null)
+            ||(loan.getStatus()==null)
+            ||(loan.getAccount()==null)
+        ) throw new LoanBadRequestException("Existen datos vacíos en la solicitud");
+
+        Account account = accountRepository.findById(loan.getAccount().getId()).orElseThrow(() -> new AccountNotFoundException("Cuenta inexistente."));
         Loan loanToSave = LoanMapper.dtoToLoan(loan);
+        loanToSave.setCreated_at(LocalDateTime.now());
+        loanToSave.setUpdated_at(LocalDateTime.now());
+        loanToSave.setDuesAmount((loan.getAmount() * (1 + (loan.getInterest() / 100))) / loan.getDues());
         loanToSave.setStatus(StatusLoan.PENDING);
+        account.setAmount(account.getAmount()+loan.getAmount());
+        accountRepository.save(account);
         return LoanMapper.loanToDto(repository.save(loanToSave));
     }
 
@@ -57,7 +81,7 @@ public class LoanService {
         if (loanDetails.getDues() != null) existingLoan.setDues(loanDetails.getDues());
         if (loanDetails.getDate() != null) existingLoan.setDate(loanDetails.getDate());
         if (loanDetails.getStatus() != null) existingLoan.setStatus(loanDetails.getStatus());
-
+        existingLoan.setUpdated_at(LocalDateTime.now());
         return LoanMapper.loanToDto( repository.save(existingLoan));
     }
 
@@ -77,23 +101,27 @@ public class LoanService {
             if (accountRepository.existsById(accountId))
             {
                 Loan existingLoan = repository.findById(loanId).get();
-                Account existingAccount = accountRepository.findById(accountId).get();
-                if (existingLoan.getAmount()>=0){
-                    return "El préstamo con id: " + loanId + " ha sido abonado El estado es "+existingLoan.getStatus().name() ;
-                }
-                if (amountToPay > 0 && amountToPay <= existingAccount.getAmount())
-                {
-                    Double loanAmount=(existingLoan.getAmount()*existingLoan.getInterest());
-                    loanAmount = loanAmount-amountToPay;
-                    existingLoan.setAmount(loanAmount>0?loanAmount:0);
-                    existingLoan.setDues(existingLoan.getDues()-1);
-                    existingAccount.setAmount(existingAccount.getAmount()-amountToPay);
-                    if (!(existingLoan.getAmount()>0)){
-                        existingLoan.setStatus(StatusLoan.FINISHED);
+                if (existingLoan.getStatus() == StatusLoan.FINISHED || existingLoan.getStatus() == StatusLoan.REFUSED) {
+                    throw new StatusInvalidException("Prestamo con estado FINISHED o REFUSED");
+                } else {
+                    Account existingAccount = accountRepository.findById(accountId).get();
+                    if (amountToPay > 0 && amountToPay <= existingAccount.getAmount()) {
+                        Double dueAmount = (existingLoan.getAmount() * (1 + (existingLoan.getInterest() / 100))) / existingLoan.getDues();
+                        if (amountToPay >= dueAmount) {
+                            existingLoan.setAmount(existingLoan.getAmount() - (amountToPay / (1 + (existingLoan.getInterest() / 100))));
+                            existingLoan.setDues(existingLoan.getDues() - 1);
+                            if (existingLoan.getDues() == 0 || !(existingLoan.getAmount() > 0)) {
+                                existingLoan.setStatus(StatusLoan.FINISHED);
+                            }
+                            existingAccount.setAmount(existingAccount.getAmount() - amountToPay);
+                            accountRepository.save(existingAccount);
+                            existingLoan.setUpdated_at(LocalDateTime.now());
+                            repository.save(existingLoan);
+                            return "El préstamo con id: " + loanId + " ha sido abonado " + amountToPay + " desde cuenta " + accountId;
+                        } else {
+                            throw new LoanDueException("El valor minimo a abonar debe ser mayor o igual al valor de cuota ($" + dueAmount + ").");
+                        }
                     }
-                    accountRepository.save(existingAccount);
-                    repository.save(existingLoan);
-                    return "El préstamo con id: " + loanId + " ha sido abonado "+amountToPay+" desde cuenta "+accountId+" El estado es "+existingLoan.getStatus().name() ;
                 }
             }
             return "La cuenta con id: " + accountId + ", no existe o tiene saldo insuficiente.";

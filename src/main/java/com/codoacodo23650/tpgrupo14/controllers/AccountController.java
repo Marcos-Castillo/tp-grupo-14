@@ -4,6 +4,7 @@ import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.dtos.AccountDto;
 import com.codoacodo23650.tpgrupo14.services.AccountService;
+import com.codoacodo23650.tpgrupo14.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ public class AccountController {
 
     @Autowired
     private AccountService service;
+    @Autowired
+    private UserService userService;
 
     // Obtener una lista de cuentas registrados
     @GetMapping
