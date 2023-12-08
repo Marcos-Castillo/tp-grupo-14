@@ -2,6 +2,7 @@ package com.codoacodo23650.tpgrupo14.services;
 
 import com.codoacodo23650.tpgrupo14.entities.Account;
 import com.codoacodo23650.tpgrupo14.entities.dtos.AccountDto;
+import com.codoacodo23650.tpgrupo14.exceptions.AccountNotFoundException;
 import com.codoacodo23650.tpgrupo14.mappers.AccountMapper;
 import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,11 @@ public class AccountService {
     }
 
     public String deleteAccount(Long id) {
-        repository.deleteById(id);
-        return "Cuenta eliminada";
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return "Cuenta eliminada";
+        } else {
+            throw new AccountNotFoundException("Cuenta inexistente.");
+        }
     }
 }
