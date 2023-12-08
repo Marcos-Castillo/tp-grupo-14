@@ -12,11 +12,9 @@ import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.LoanNotFoundExcept
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
 import com.codoacodo23650.tpgrupo14.exceptions.*;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
-import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import com.codoacodo23650.tpgrupo14.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,11 +26,13 @@ public class LoanService {
 
     private final LoanRepository repository;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
-    public LoanService(LoanRepository loanRepository,AccountRepository accountRepository) {
+    public LoanService(LoanRepository loanRepository,AccountRepository accountRepository, UserRepository userRepository) {
 
         this.repository = loanRepository;
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
     }
 
     public List<LoanDto> getAllLoans() {
@@ -41,7 +41,7 @@ public class LoanService {
                 .collect(Collectors.toList());
     }
     public List<LoanDto> getAllLoansByUserId(Long userId) {
-        Boolean existId = repository.existsById(userId);
+        Boolean existId = userRepository.existsById(userId);
         if(!existId) throw new UserNotFoundException("No se encontró un usuario con ese id");
 
         return repository.findLoansByUserId(userId).stream()
@@ -60,7 +60,7 @@ public class LoanService {
         if((loan.getAmount()==null)
             ||(loan.getInterest()==null)
             ||(loan.getDues()==null)
-            //||(loan.getDate()==null)
+            ||(loan.getDate()==null)
             ||(loan.getStatus()==null)
             ||(loan.getAccount()==null)
         ) throw new LoanBadRequestException("Existen datos vacíos en la solicitud");
@@ -96,14 +96,6 @@ public class LoanService {
             return "El préstamo con id: " + loanId + " ha sido eliminado";
         } else {
             return "El préstamo con id: " + loanId + ", no ha sido eliminado";
-        }
-         */
-
-        if (!repository.existsById(loanId)){
-            throw new LoanNotFoundException("No se encontró un préstamo con ese id");
-        } else {
-            repository.deleteById(loanId);
-            return "El préstamo con id: " + loanId + " ha sido eliminado";
         }
     }
 

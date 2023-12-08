@@ -68,18 +68,13 @@ public class LoanController {
     // Pagar una cuota de un préstamo de cliente
     @PostMapping(value = "/payment")
     public ResponseEntity<String> payment(@RequestBody PaymentRequest paymentRequest) {
-        try {
+
             Long loanId = paymentRequest.getLoanId();
             Double amountToPay = paymentRequest.getAmountToPay();
             Long accountId = paymentRequest.getAccountId();
 
             String mensaje =  loanService.payment( loanId,  amountToPay,  accountId);
 
-
             return ResponseEntity.status(HttpStatus.OK).body(mensaje);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Datos Incorrectos.");
-        }
-
     }
 }
