@@ -8,6 +8,7 @@ import com.codoacodo23650.tpgrupo14.exceptions.AccountNotFoundException;
 import com.codoacodo23650.tpgrupo14.exceptions.LoanDueException;
 import com.codoacodo23650.tpgrupo14.exceptions.StatusInvalidException;
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.LoanBadRequestException;
+import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.LoanNotFoundException;
 import com.codoacodo23650.tpgrupo14.exceptions.exceptionKinds.UserNotFoundException;
 import com.codoacodo23650.tpgrupo14.exceptions.*;
 import com.codoacodo23650.tpgrupo14.mappers.LoanMapper;
@@ -15,6 +16,7 @@ import com.codoacodo23650.tpgrupo14.mappers.TransferMapper;
 import com.codoacodo23650.tpgrupo14.repositories.AccountRepository;
 import com.codoacodo23650.tpgrupo14.repositories.LoanRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -48,7 +50,8 @@ public class LoanService {
             }
 
     public LoanDto getLoanById(Long loanId) {
-        LoanDto loanDto = LoanMapper.loanToDto(repository.findById(loanId).get());
+        LoanDto loanDto = LoanMapper.loanToDto(repository.findById(loanId)
+                .orElseThrow(()-> new LoanNotFoundException("No se encontró un préstamo con ese id")));
         return loanDto;
     }
 
@@ -75,7 +78,8 @@ public class LoanService {
 
 
     public LoanDto updateLoan(Long loanId, LoanDto loanDetails) {
-        Loan existingLoan = repository.findById(loanId).get();
+        Loan existingLoan = repository.findById(loanId)
+                .orElseThrow(()-> new LoanNotFoundException("No se encontró un préstamo con ese id"));
 
         if (loanDetails.getAmount() != null) existingLoan.setAmount(loanDetails.getAmount());
         if (loanDetails.getInterest() != null) existingLoan.setInterest(loanDetails.getInterest());
@@ -89,12 +93,18 @@ public class LoanService {
     public String deleteLoan(Long loanId) {
         if (repository.existsById(loanId)){
             repository.deleteById(loanId);
-            return "El préstamo con id: " + loanId + " ha sido eliminada";
+            return "El préstamo con id: " + loanId + " ha sido eliminado";
         } else {
-            return "El préstamo con id: " + loanId + ", no ha sido eliminada";
+            return "El préstamo con id: " + loanId + ", no ha sido eliminado";
         }
+         */
 
-
+        if (!repository.existsById(loanId)){
+            throw new LoanNotFoundException("No se encontró un préstamo con ese id");
+        } else {
+            repository.deleteById(loanId);
+            return "El préstamo con id: " + loanId + " ha sido eliminado";
+        }
     }
 
     public String payment(Long loanId, Double amountToPay, Long accountId) {
@@ -103,8 +113,8 @@ public class LoanService {
             // controla existencia de Account
             if (accountRepository.existsById(accountId))
             {
-                Loan existingLoan = repository.findById(loanId).get();
-                // controla estado del Loan
+                Loan existingLoan = repository.findById(loanId)
+                        .orElseThrow(()-> new LoanNotFoundException("No se encontró un préstamo con ese id"));
                 if (existingLoan.getStatus() == StatusLoan.FINISHED || existingLoan.getStatus() == StatusLoan.REFUSED) {
                     throw new StatusInvalidException("Prestamo con estado FINISHED o REFUSED");
                 } else {
